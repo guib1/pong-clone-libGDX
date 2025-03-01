@@ -25,7 +25,8 @@ public class Main extends ApplicationAdapter {
     private Musics boom;
     private Musics music;
 
-
+    private Player player1;
+    private Player player2;
 
 //    private String text(String textField) {
 //        style.font = new BitmapFont();
@@ -40,10 +41,12 @@ public class Main extends ApplicationAdapter {
     public void create() {
         shape = new ShapeRenderer();
         batch = new SpriteBatch();
+        player1 = new Player();
+        player2 = new Player();
+
         imageIntroduction = new Texture("sanic.png");
         textIntroduction = new Texture("pong....png");
         background = new Texture("bg.jpeg");
-
 
         boom = new Musics();
         boom.setBoom();
@@ -66,30 +69,37 @@ public class Main extends ApplicationAdapter {
         if (!boom.boom.isPlaying()) {
             ScreenUtils.clear(1, 0, 0, 1, true);
             batch.begin();
+            batch.setColor(0.5f, 0.5f, 0.5f, 1f);
             batch.draw(background, 0, 0);
             batch.end();
-            players();
+            pMovement();
         }
     }
 
-    public void players() {
+    public void pMovement() {
         // players movement
+        float PLAYER_SPEED = 500f;
+        float delta = Gdx.graphics.getDeltaTime();
+        float centerBars = (Gdx.graphics.getHeight() - 70) / 2f;
+
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             player1.movement(PLAYER_SPEED * delta);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             player1.movement(-PLAYER_SPEED * delta);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             player2.movement(PLAYER_SPEED * delta);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             player2.movement(-PLAYER_SPEED * delta);
         }
+
         shape.begin(ShapeRenderer.ShapeType.Filled);
         shape.setColor(Color.WHITE);
-        player1 = shape.rect(50, (Gdx.graphics.getHeight() - 150) / 2f, 20, 150);
-        player2 = shape.rect(Gdx.graphics.getWidth() - 70, (Gdx.graphics.getHeight() - 150) / 2f, 20, 150);
+        // start of the 2 players or 1 player and 1 bot
+        shape.rect(50, player1.getY() + centerBars, 20, 70);
+        shape.rect(Gdx.graphics.getWidth() - 70, player2.getY() + centerBars, 20, 70);
         shape.end();
     }
 

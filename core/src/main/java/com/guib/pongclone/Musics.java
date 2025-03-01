@@ -16,5 +16,6 @@ public class Musics {
         music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
         music.play();
         music.setVolume(0.5f);
+        music.isLooping();
     }
 }
