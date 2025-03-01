@@ -2,14 +2,11 @@ package com.guib.pongclone;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  * {@link ApplicationListener} implementation shared by all platforms.
@@ -50,12 +47,9 @@ public class Main extends ApplicationAdapter {
 
         boom = new Musics();
         boom.setBoom();
-        boom.boom.setOnCompletionListener(new Music.OnCompletionListener() {
-            @Override
-            public void onCompletion(Music musicc) {
-                music = new Musics();
-                music.setMusic();
-            }
+        boom.boom.setOnCompletionListener(musicc -> {
+            music = new Musics();
+            music.setMusic();
         });
     }
 
