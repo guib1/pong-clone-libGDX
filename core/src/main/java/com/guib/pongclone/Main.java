@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 /**
@@ -23,6 +25,9 @@ public class Main extends ApplicationAdapter {
 
     private Player player1;
     private Player player2;
+
+    private Rectangle topBarRect;
+    private Rectangle downBarRect;
 
 //    private String text(String textField) {
 //        style.font = new BitmapFont();
@@ -65,7 +70,18 @@ public class Main extends ApplicationAdapter {
             batch.setColor(0.5f, 0.5f, 0.5f, 1f);
             batch.draw(background, 0, 0);
             batch.end();
+
+            shape.begin(ShapeRenderer.ShapeType.Filled);
+            shape.setColor(Color.WHITE);
+            downBarRect = new Rectangle(0, 0, Gdx.graphics.getWidth(), 20);
+            topBarRect = new Rectangle(0, Gdx.graphics.getHeight() - 20, Gdx.graphics.getWidth(), 20);
+
+            shape.rect(topBarRect.x, topBarRect.y, topBarRect.width, topBarRect.height);
+            shape.rect(downBarRect.x, downBarRect.y, downBarRect.width, downBarRect.height);
+            shape.end();
+
             pMovement();
+            collision();
         }
     }
 
@@ -73,27 +89,44 @@ public class Main extends ApplicationAdapter {
         // players movement
         float PLAYER_SPEED = 500f;
         float delta = Gdx.graphics.getDeltaTime();
-        float centerBars = (Gdx.graphics.getHeight() - 70) / 2f;
+        float centerY = (Gdx.graphics.getHeight() - 70) / 2f;
 
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             player1.movement(PLAYER_SPEED * delta);
-        }
-        else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             player1.movement(-PLAYER_SPEED * delta);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             player2.movement(PLAYER_SPEED * delta);
-        }
-        else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             player2.movement(-PLAYER_SPEED * delta);
         }
 
         shape.begin(ShapeRenderer.ShapeType.Filled);
         shape.setColor(Color.WHITE);
         // start of the 2 players or 1 player and 1 bot
-        shape.rect(50, player1.getY() + centerBars, 20, 70);
-        shape.rect(Gdx.graphics.getWidth() - 70, player2.getY() + centerBars, 20, 70);
+        player1.rect = new Rectangle(50, player1.getY() + centerY, 20, 70);
+        player2.rect = new Rectangle(Gdx.graphics.getWidth() - 70, player2.getY() + centerY, 20, 70);
+
+        shape.rect(player1.rect.x, player1.rect.y, player1.rect.width, player1.rect.height);
+        shape.rect(player2.rect.x, player2.rect.y, player2.rect.width, player2.rect.height);
         shape.end();
+    }
+
+    public void collision(){
+        // Vertical collision bars
+        if (Intersector.overlaps(player1.rect, topBarRect)) {
+            player1.editY((Gdx.graphics.getHeight() - 300) - Gdx.graphics.getDeltaTime());
+        }
+        if (Intersector.overlaps(player1.rect, downBarRect)) {
+            player1.editY(-(Gdx.graphics.getHeight() - 300) - Gdx.graphics.getDeltaTime());
+        }
+        if (Intersector.overlaps(player2.rect, topBarRect)) {
+            player2.editY((Gdx.graphics.getHeight() - 300) - Gdx.graphics.getDeltaTime());
+        }
+        if (Intersector.overlaps(player2.rect, downBarRect)) {
+            player2.editY(-(Gdx.graphics.getHeight() - 300) - Gdx.graphics.getDeltaTime());
+        }
     }
 
     @Override
