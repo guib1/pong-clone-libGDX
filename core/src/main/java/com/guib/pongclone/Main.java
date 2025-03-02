@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -25,6 +26,7 @@ public class Main extends ApplicationAdapter {
 
     private Player player1;
     private Player player2;
+    private Ball ball;
 
     private Rectangle topBarRect;
     private Rectangle downBarRect;
@@ -44,6 +46,7 @@ public class Main extends ApplicationAdapter {
         batch = new SpriteBatch();
         player1 = new Player();
         player2 = new Player();
+        ball = new Ball();
 
         imageIntroduction = new Texture("sanic.png");
         textIntroduction = new Texture("pong....png");
@@ -59,6 +62,10 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render() {
+        float pCenterY = (Gdx.graphics.getHeight() - 70) / 2f;
+        float centerY = Gdx.graphics.getHeight() / 2f;
+        float centerX = Gdx.graphics.getWidth() / 2f;
+
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
         batch.begin();
         batch.draw(imageIntroduction, 0, 0);
@@ -80,6 +87,21 @@ public class Main extends ApplicationAdapter {
             shape.rect(downBarRect.x, downBarRect.y, downBarRect.width, downBarRect.height);
             shape.end();
 
+            shape.begin(ShapeRenderer.ShapeType.Filled);
+            shape.setColor(Color.WHITE);
+            // start of the 2 players
+            player1.rect = new Rectangle(50, player1.getY() + pCenterY, 20, 70);
+            player2.rect = new Rectangle(Gdx.graphics.getWidth() - 70, player2.getY() + pCenterY, 20, 70);
+            shape.rect(player1.rect.x, player1.rect.y, player1.rect.width, player1.rect.height);
+            shape.rect(player2.rect.x, player2.rect.y, player2.rect.width, player2.rect.height);
+            shape.end();
+
+            shape.begin(ShapeRenderer.ShapeType.Filled);
+            shape.setColor(Color.WHITE);
+            ball.circ = new Circle(ball.getX() + centerX, ball.getY() + centerY, 10);
+            shape.circle(ball.circ.x, ball.circ.y, ball.circ.radius);
+            shape.end();
+
             pMovement();
             collision();
         }
@@ -89,7 +111,6 @@ public class Main extends ApplicationAdapter {
         // players movement
         float PLAYER_SPEED = 500f;
         float delta = Gdx.graphics.getDeltaTime();
-        float centerY = (Gdx.graphics.getHeight() - 70) / 2f;
 
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             player1.movement(PLAYER_SPEED * delta);
@@ -101,19 +122,9 @@ public class Main extends ApplicationAdapter {
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             player2.movement(-PLAYER_SPEED * delta);
         }
-
-        shape.begin(ShapeRenderer.ShapeType.Filled);
-        shape.setColor(Color.WHITE);
-        // start of the 2 players or 1 player and 1 bot
-        player1.rect = new Rectangle(50, player1.getY() + centerY, 20, 70);
-        player2.rect = new Rectangle(Gdx.graphics.getWidth() - 70, player2.getY() + centerY, 20, 70);
-
-        shape.rect(player1.rect.x, player1.rect.y, player1.rect.width, player1.rect.height);
-        shape.rect(player2.rect.x, player2.rect.y, player2.rect.width, player2.rect.height);
-        shape.end();
     }
 
-    public void collision(){
+    public void collision() {
         // Vertical collision bars
         if (Intersector.overlaps(player1.rect, topBarRect)) {
             player1.editY((Gdx.graphics.getHeight() - 300) - Gdx.graphics.getDeltaTime());
@@ -126,6 +137,20 @@ public class Main extends ApplicationAdapter {
         }
         if (Intersector.overlaps(player2.rect, downBarRect)) {
             player2.editY(-(Gdx.graphics.getHeight() - 300) - Gdx.graphics.getDeltaTime());
+        }
+
+        // Ball Collision
+        if (Intersector.overlaps(ball.circ, player1.rect)) {
+
+        }
+        if (Intersector.overlaps(ball.circ, player2.rect)) {
+
+        }
+        if (Intersector.overlaps(ball.circ, topBarRect)) {
+
+        }
+        if (Intersector.overlaps(ball.circ, downBarRect)) {
+
         }
     }
 

@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Player {
     private float y;
-
     public Rectangle rect = new Rectangle();
 
     public void movement(float delta) {
