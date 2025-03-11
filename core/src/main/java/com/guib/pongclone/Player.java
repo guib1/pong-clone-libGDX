@@ -14,7 +14,10 @@ public class Player {
         return (int) this.y;
     }
 
-    public float editY(float y) {
-        return this.y = y;
+    public int score(int goal) {
+        int score = 0;
+        return score += goal;
     }
+
+
 }

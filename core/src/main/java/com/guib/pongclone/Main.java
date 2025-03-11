@@ -3,6 +3,8 @@ package com.guib.pongclone;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
@@ -28,6 +30,9 @@ public class Main extends ApplicationAdapter {
     private Player player2;
     private Ball ball;
 
+    private BitmapFont font;
+    private GlyphLayout glyphLayout;
+
     private Rectangle topBarRect;
     private Rectangle downBarRect;
 
@@ -46,11 +51,13 @@ public class Main extends ApplicationAdapter {
         batch = new SpriteBatch();
         player1 = new Player();
         player2 = new Player();
-        ball = new Ball();
+        glyphLayout = new GlyphLayout();
+        ball = new Ball(0, 0, 250);
 
         imageIntroduction = new Texture("sanic.png");
         textIntroduction = new Texture("pong....png");
         background = new Texture("bg.jpeg");
+        font = new BitmapFont(Gdx.files.internal("font.fnt"));
 
         boom = new Musics();
         boom.setBoom();
@@ -62,10 +69,6 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render() {
-        float pCenterY = (Gdx.graphics.getHeight() - 70) / 2f;
-        float centerY = Gdx.graphics.getHeight() / 2f;
-        float centerX = Gdx.graphics.getWidth() / 2f;
-
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
         batch.begin();
         batch.draw(imageIntroduction, 0, 0);
@@ -78,35 +81,67 @@ public class Main extends ApplicationAdapter {
             batch.draw(background, 0, 0);
             batch.end();
 
-            shape.begin(ShapeRenderer.ShapeType.Filled);
-            shape.setColor(Color.WHITE);
-            downBarRect = new Rectangle(0, 0, Gdx.graphics.getWidth(), 20);
-            topBarRect = new Rectangle(0, Gdx.graphics.getHeight() - 20, Gdx.graphics.getWidth(), 20);
-
-            shape.rect(topBarRect.x, topBarRect.y, topBarRect.width, topBarRect.height);
-            shape.rect(downBarRect.x, downBarRect.y, downBarRect.width, downBarRect.height);
-            shape.end();
-
-            shape.begin(ShapeRenderer.ShapeType.Filled);
-            shape.setColor(Color.WHITE);
-            // start of the 2 players
-            player1.rect = new Rectangle(50, player1.getY() + pCenterY, 20, 70);
-            player2.rect = new Rectangle(Gdx.graphics.getWidth() - 70, player2.getY() + pCenterY, 20, 70);
-            shape.rect(player1.rect.x, player1.rect.y, player1.rect.width, player1.rect.height);
-            shape.rect(player2.rect.x, player2.rect.y, player2.rect.width, player2.rect.height);
-            shape.end();
-
-            shape.begin(ShapeRenderer.ShapeType.Filled);
-            shape.setColor(Color.WHITE);
-            ball.circ = new Circle(ball.getX() + centerX, ball.getY() + centerY, 10);
-            shape.circle(ball.circ.x, ball.circ.y, ball.circ.radius);
-            shape.end();
-
-            ball.randMovement(ball.getXRand() * Gdx.graphics.getDeltaTime(), ball.getYRand() * Gdx.graphics.getDeltaTime());
+            mainGame();
+            ui();
 
             pMovement();
             collision();
+            ball.update(Gdx.graphics.getDeltaTime());
         }
+    }
+
+    private int goal = 0;
+
+    public void mainGame() {
+        float pCenterY = (Gdx.graphics.getHeight() - 70) / 2f;
+        float centerY = Gdx.graphics.getHeight() / 2f;
+        float centerX = Gdx.graphics.getWidth() / 2f;
+
+        shape.begin(ShapeRenderer.ShapeType.Filled);
+        shape.setColor(Color.WHITE);
+        downBarRect = new Rectangle(0, 0, Gdx.graphics.getWidth(), 20);
+        topBarRect = new Rectangle(0, Gdx.graphics.getHeight() - 20, Gdx.graphics.getWidth(), 20);
+
+        shape.rect(topBarRect.x, topBarRect.y, topBarRect.width, topBarRect.height);
+        shape.rect(downBarRect.x, downBarRect.y, downBarRect.width, downBarRect.height);
+        shape.end();
+        shape.begin(ShapeRenderer.ShapeType.Filled);
+        shape.setColor(Color.WHITE);
+        // start of the 2 players
+        player1.rect = new Rectangle(50, player1.getY() + pCenterY, 20, 70);
+        player2.rect = new Rectangle(Gdx.graphics.getWidth() - 70, player2.getY() + pCenterY, 20, 70);
+        shape.rect(player1.rect.x, player1.rect.y, player1.rect.width, player1.rect.height);
+        shape.rect(player2.rect.x, player2.rect.y, player2.rect.width, player2.rect.height);
+        shape.end();
+
+        shape.begin(ShapeRenderer.ShapeType.Filled);
+        shape.setColor(Color.WHITE);
+        ball.circ = new Circle(ball.getX() + centerX, ball.getY() + centerY, 10);
+        shape.circle(ball.circ.x, ball.circ.y, ball.circ.radius);
+        shape.end();
+
+        if (ball.circ.x > Gdx.graphics.getWidth()) {
+            ball.circ.setPosition(centerX, centerY);
+            ball.resetPosition(centerX, centerY);
+            goal += 1;
+        }
+        if (ball.circ.x < -Gdx.graphics.getWidth()) {
+            ball.circ.setPosition(centerX, centerY);
+            ball.resetPosition(centerX, centerY);
+            goal += 1;
+        }
+    }
+
+    public void ui() {
+        glyphLayout.setText(font, player1.score(goal) + "    " + player2.score(goal));
+        float textWidth = glyphLayout.width;
+        float textHeight = glyphLayout.height;
+        float x = (Gdx.graphics.getWidth() - textWidth) / 2;
+        float y = (Gdx.graphics.getHeight() + textHeight) / 2;
+
+        batch.begin();
+        font.draw(batch, glyphLayout, x, y + 180);
+        batch.end();
     }
 
     private final float PLAYER_SPEED = 500f;
@@ -140,24 +175,32 @@ public class Main extends ApplicationAdapter {
             player2.movement(PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         }
 
-        // Ball Collision
+        // Ball Collisions
         if (Intersector.overlaps(ball.circ, player1.rect)) {
-            ball.randMovement(-ball.getXRand() * Gdx.graphics.getDeltaTime(), ball.getYRand() * Gdx.graphics.getDeltaTime());
+            ball.reflect(true, false);
+            ball.addVelocityX(50);
+            ball.addVelocityY(-20);
         }
         if (Intersector.overlaps(ball.circ, player2.rect)) {
-            ball.randMovement(-ball.getXRand() * Gdx.graphics.getDeltaTime(), ball.getYRand() * Gdx.graphics.getDeltaTime());
+            ball.reflect(true, false);
+            ball.addVelocityX(-50);
+            ball.addVelocityY(20);
         }
         if (Intersector.overlaps(ball.circ, topBarRect)) {
-            ball.randMovement(ball.getXRand() * Gdx.graphics.getDeltaTime(), -ball.getYRand() * Gdx.graphics.getDeltaTime());
+            ball.reflect(false, true);
+            ball.addVelocityX(20);
         }
         if (Intersector.overlaps(ball.circ, downBarRect)) {
-            ball.randMovement(ball.getXRand() * Gdx.graphics.getDeltaTime(), -ball.getYRand() * Gdx.graphics.getDeltaTime());
+            ball.reflect(false, true);
+            ball.addVelocityX(-20);
         }
     }
 
     @Override
     public void dispose() {
         batch.dispose();
+        font.dispose();
+        shape.dispose();
         imageIntroduction.dispose();
         textIntroduction.dispose();
     }
