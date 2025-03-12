@@ -157,7 +157,7 @@ public class Main extends ApplicationAdapter {
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             player2.movement(PLAYER_SPEED * player2.update());
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            player2.movement(-PLAYER_SPEED * player2.update());
+            player2.movement(-PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         }
     }
 
