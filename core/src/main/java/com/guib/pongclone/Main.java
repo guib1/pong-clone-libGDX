@@ -87,8 +87,6 @@ public class Main extends ApplicationAdapter {
             pMovement();
             collision();
 
-            player1.update(Gdx.graphics.getDeltaTime());
-            player2.update(Gdx.graphics.getDeltaTime());
             ball.update(Gdx.graphics.getDeltaTime());
         }
     }
@@ -152,30 +150,30 @@ public class Main extends ApplicationAdapter {
     public void pMovement() {
         // players movement
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            player1.movement(PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player1.movement(PLAYER_SPEED * player1.update());
         } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            player1.movement(-PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player1.movement(-PLAYER_SPEED * player1.update());
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            player2.movement(PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player2.movement(PLAYER_SPEED * player2.update());
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            player2.movement(-PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player2.movement(-PLAYER_SPEED * player2.update());
         }
     }
 
     public void collision() {
         // Vertical collision bars
         if (Intersector.overlaps(player1.rect, topBarRect)) {
-            player1.movement(-PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player1.movement(-PLAYER_SPEED * player1.update());
         }
         if (Intersector.overlaps(player1.rect, downBarRect)) {
-            player1.movement(PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player1.movement(PLAYER_SPEED * player1.update());
         }
         if (Intersector.overlaps(player2.rect, topBarRect)) {
-            player2.movement(-PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player2.movement(-PLAYER_SPEED * player2.update());
         }
         if (Intersector.overlaps(player2.rect, downBarRect)) {
-            player2.movement(PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player2.movement(PLAYER_SPEED * player2.update());
         }
 
         // Ball Collisions
@@ -191,11 +189,11 @@ public class Main extends ApplicationAdapter {
         }
         if (Intersector.overlaps(ball.circ, topBarRect)) {
             ball.reflect(false, true);
-            ball.addVelocityX(20);
+            ball.addVelocityX(40);
         }
         if (Intersector.overlaps(ball.circ, downBarRect)) {
             ball.reflect(false, true);
-            ball.addVelocityX(-20);
+            ball.addVelocityX(40);
         }
     }
 

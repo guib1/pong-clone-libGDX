@@ -1,6 +1,5 @@
 package com.guib.pongclone;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
 
 import java.util.Random;
