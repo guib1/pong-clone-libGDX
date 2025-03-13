@@ -23,6 +23,9 @@ public class Main extends ApplicationAdapter {
     private Texture textIntroduction;
     private Texture background;
 
+    private Menu menu;
+    private Effects effects;
+
     private Musics boom;
     private Musics music;
 
@@ -49,6 +52,8 @@ public class Main extends ApplicationAdapter {
     public void create() {
         shape = new ShapeRenderer();
         batch = new SpriteBatch();
+        menu = new Menu();
+        effects  = new Effects();
         player1 = new Player();
         player2 = new Player();
         glyphLayout = new GlyphLayout();
@@ -72,28 +77,34 @@ public class Main extends ApplicationAdapter {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
         batch.begin();
         batch.draw(imageIntroduction, 0, 0);
+        batch.setColor(effects.fading(), effects.fading(), effects.fading(), 1f);
         batch.draw(textIntroduction, 0, 0);
         batch.end();
         if (!boom.boom.isPlaying()) {
-            ScreenUtils.clear(1, 0, 0, 1, true);
-            batch.begin();
-            batch.setColor(0.5f, 0.5f, 0.5f, 1f);
-            batch.draw(background, 0, 0);
-            batch.end();
-
-            mainGame();
-            ui();
-
-            pMovement();
-            collision();
-
-            ball.update(Gdx.graphics.getDeltaTime());
+            inGame();
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            Gdx.app.exit();
         }
     }
 
-    private int goal = 0;
+    public void inGame() {
+        ScreenUtils.clear(1, 0, 0, 1, true);
+        batch.begin();
+        batch.setColor(0.5f, 0.5f, 0.5f, 1f);
+        batch.draw(background, 0, 0);
+        batch.end();
 
-    public void mainGame() {
+        match();
+        ui();
+
+        pMovement();
+        collision();
+
+        ball.update(Gdx.graphics.getDeltaTime());
+    }
+
+    public void match() {
         float pCenterY = (Gdx.graphics.getHeight() - 70) / 2f;
         float centerY = Gdx.graphics.getHeight() / 2f;
         float centerX = Gdx.graphics.getWidth() / 2f;
@@ -122,19 +133,17 @@ public class Main extends ApplicationAdapter {
         shape.end();
 
         if (ball.circ.x > Gdx.graphics.getWidth()) {
-            ball.circ.setPosition(centerX, centerY);
-            ball.resetPosition(centerX, centerY);
-            goal += 1;
+            ball.resetPosition(0, 0, 250);
+            player1.score(true);
         }
-        if (ball.circ.x < -Gdx.graphics.getWidth()) {
-            ball.circ.setPosition(centerX, centerY);
-            ball.resetPosition(centerX, centerY);
-            goal += 1;
+        if (ball.circ.x < 0) {
+            ball.resetPosition(0, 0, 250);
+            player2.score(true);
         }
     }
 
     public void ui() {
-        glyphLayout.setText(font, player1.score(goal) + "    " + player2.score(goal));
+        glyphLayout.setText(font, player1.score(false) + "         " + player2.score(false));
         float textWidth = glyphLayout.width;
         float textHeight = glyphLayout.height;
         float x = (Gdx.graphics.getWidth() - textWidth) / 2;
@@ -178,21 +187,21 @@ public class Main extends ApplicationAdapter {
 
         // Ball Collisions
         if (Intersector.overlaps(ball.circ, player1.rect)) {
-            ball.reflect(true, false);
+            ball.collisionWalls(true, false);
             ball.addVelocityX(50);
             ball.addVelocityY(-20);
         }
         if (Intersector.overlaps(ball.circ, player2.rect)) {
-            ball.reflect(true, false);
+            ball.collisionWalls(true, false);
             ball.addVelocityX(-50);
             ball.addVelocityY(20);
         }
         if (Intersector.overlaps(ball.circ, topBarRect)) {
-            ball.reflect(false, true);
+            ball.collisionWalls(false, true);
             ball.addVelocityX(40);
         }
         if (Intersector.overlaps(ball.circ, downBarRect)) {
-            ball.reflect(false, true);
+            ball.collisionWalls(false, true);
             ball.addVelocityX(40);
         }
     }

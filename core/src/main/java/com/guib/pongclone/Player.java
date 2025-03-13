@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Player {
     private float y;
+    private int score = 0;
     public Rectangle rect = new Rectangle();
 
     public void movement(float delta) {
@@ -19,8 +20,12 @@ public class Player {
         return Gdx.graphics.getDeltaTime();
     }
 
-    public int score(int goal) {
-        int score = 0;
-        return score += goal;
+    public int score(boolean goal) {
+        if (goal) {
+            this.score++;
+        } else {
+            return this.score;
+        }
+        return this.score;
     }
 }

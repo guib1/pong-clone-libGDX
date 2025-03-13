@@ -1,7 +1,16 @@
 package com.guib.pongclone;
 
 public class Effects {
-    public void fadeOut() {
+    private float a = 0.0f;
 
+    public void fadeOut() {
+    }
+
+    public float fading() {
+        this.a += 0.001f;
+        if (this.a >=  1.0f) {
+            this.a = 1.0f;
+        }
+        return this.a;
     }
 }

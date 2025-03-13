@@ -36,11 +36,14 @@ public class Ball {
         this.velocityY = (float) Math.sin(angle) * initialSpeed;
     }
 
-    public void resetPosition(float centerX, float centerY) {
+    public void resetPosition(float centerX, float centerY, float initialSpeed) {
         this.x = centerX;
         this.y = centerY;
-        this.velocityX = 0;
-        this.velocityY = 0;
+
+        Random random = new Random();
+        float angle = random.nextFloat() * 2 * (float) Math.PI;
+        this.velocityX = (float) Math.cos(angle) * initialSpeed;
+        this.velocityY = (float) Math.sin(angle) * initialSpeed;
     }
 
     public void update(float deltaTime) {
@@ -49,12 +52,16 @@ public class Ball {
         this.circ.setPosition(this.x, this.y);
     }
 
-    public void reflect(boolean x, boolean y) {
+    public void collisionWalls(boolean x, boolean y) {
         if (x) {
             this.velocityX *= -1;
         }
         if (y) {
             this.velocityY *= -1;
         }
+    }
+
+    public void collisionPlayers(Player player) {
+
     }
 }
