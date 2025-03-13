@@ -1,6 +1,5 @@
 package com.guib.pongclone;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
 
 import java.util.Random;
@@ -10,14 +9,6 @@ public class Ball {
     private float velocityX, velocityY;
     public Circle circ = new Circle();
 
-    public float addVelocityX(float x) {
-        return velocityX += x;
-    }
-
-    public float addVelocityY(float y) {
-        return velocityY += y;
-    }
-
     public int getX() {
         return (int) this.x;
     }
@@ -26,33 +17,35 @@ public class Ball {
         return (int) this.y;
     }
 
-    public Ball(float deltaX, float deltaY, float initialSpeed) {
-        this.x = deltaX;
-        this.y = deltaY;
-
+    public void ballSpawn(float initialSpeed) {
         Random random = new Random();
         float angle = random.nextFloat() * 2 * (float) Math.PI;
         this.velocityX = (float) Math.cos(angle) * initialSpeed;
         this.velocityY = (float) Math.sin(angle) * initialSpeed;
+    }
+
+    public Ball(float deltaX, float deltaY, float initialSpeed) {
+        this.x = deltaX;
+        this.y = deltaY;
+        ballSpawn(initialSpeed);
     }
 
     public void resetPosition(float centerX, float centerY, float initialSpeed) {
         this.x = centerX;
         this.y = centerY;
-
-        Random random = new Random();
-        float angle = random.nextFloat() * 2 * (float) Math.PI;
-        this.velocityX = (float) Math.cos(angle) * initialSpeed;
-        this.velocityY = (float) Math.sin(angle) * initialSpeed;
+        ballSpawn(initialSpeed);
     }
 
-    public void update(float deltaTime) {
-        this.x += this.velocityX * deltaTime;
-        this.y += this.velocityY * deltaTime;
-        this.circ.setPosition(this.x, this.y);
+    public void addVelocity(float x, float y) {
+        if (this.x < 0){
+            velocityX += x * -1;
+        } else {
+            velocityX += x * 1;
+        }
+        velocityY += y;
     }
 
-    public void collisionWalls(boolean x, boolean y) {
+    public void simpleCollision(boolean x, boolean y) {
         if (x) {
             this.velocityX *= -1;
         }
@@ -61,7 +54,20 @@ public class Ball {
         }
     }
 
-    public void collisionPlayers(Player player) {
+    public void playersCollision(Player player, int alternator) {
+        float impactPosition = (this.circ.y - (player.rect.y + player.rect.height / 2)) / (player.rect.height / 2);
 
+        impactPosition = Math.max(-1, Math.min(1, impactPosition));
+
+        float baseSpeed = 550;
+
+        this.velocityX = baseSpeed * alternator;
+        this.velocityY = impactPosition * baseSpeed;
+    }
+
+    public void update(float deltaTime) {
+        this.x += this.velocityX * deltaTime;
+        this.y += this.velocityY * deltaTime;
+        this.circ.setPosition(this.x, this.y);
     }
 }

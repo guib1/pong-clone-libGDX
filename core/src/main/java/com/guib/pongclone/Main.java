@@ -53,11 +53,11 @@ public class Main extends ApplicationAdapter {
         shape = new ShapeRenderer();
         batch = new SpriteBatch();
         menu = new Menu();
-        effects  = new Effects();
+        effects = new Effects();
         player1 = new Player();
         player2 = new Player();
         glyphLayout = new GlyphLayout();
-        ball = new Ball(0, 0, 250);
+        ball = new Ball(0, 0, 350);
 
         imageIntroduction = new Texture("sanic.png");
         textIntroduction = new Texture("pong....png");
@@ -75,7 +75,7 @@ public class Main extends ApplicationAdapter {
     @Override
     public void render() {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-        batch.begin();
+        /*batch.begin();
         batch.draw(imageIntroduction, 0, 0);
         batch.setColor(effects.fading(), effects.fading(), effects.fading(), 1f);
         batch.draw(textIntroduction, 0, 0);
@@ -83,9 +83,16 @@ public class Main extends ApplicationAdapter {
         if (!boom.boom.isPlaying()) {
             inGame();
         }
+         */
+        inGame();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
+        System.out.println(player1.rect.width);
+        System.out.println(player1.rect.height);
+        System.out.println(ball.getY());
+        System.out.println(player1.getY());
+        System.out.println("");
     }
 
     public void inGame() {
@@ -133,11 +140,11 @@ public class Main extends ApplicationAdapter {
         shape.end();
 
         if (ball.circ.x > Gdx.graphics.getWidth()) {
-            ball.resetPosition(0, 0, 250);
+            ball.resetPosition(0, 0, 350);
             player1.score(true);
         }
         if (ball.circ.x < 0) {
-            ball.resetPosition(0, 0, 250);
+            ball.resetPosition(0, 0, 350);
             player2.score(true);
         }
     }
@@ -154,7 +161,7 @@ public class Main extends ApplicationAdapter {
         batch.end();
     }
 
-    private final float PLAYER_SPEED = 500f;
+    private final float PLAYER_SPEED = 700f;
 
     public void pMovement() {
         // players movement
@@ -187,22 +194,18 @@ public class Main extends ApplicationAdapter {
 
         // Ball Collisions
         if (Intersector.overlaps(ball.circ, player1.rect)) {
-            ball.collisionWalls(true, false);
-            ball.addVelocityX(50);
-            ball.addVelocityY(-20);
+            ball.playersCollision(player1, 1);
         }
         if (Intersector.overlaps(ball.circ, player2.rect)) {
-            ball.collisionWalls(true, false);
-            ball.addVelocityX(-50);
-            ball.addVelocityY(20);
+            ball.playersCollision(player2, -1);
         }
         if (Intersector.overlaps(ball.circ, topBarRect)) {
-            ball.collisionWalls(false, true);
-            ball.addVelocityX(40);
+            ball.simpleCollision(false, true);
+            ball.addVelocity(50, 0);
         }
         if (Intersector.overlaps(ball.circ, downBarRect)) {
-            ball.collisionWalls(false, true);
-            ball.addVelocityX(40);
+            ball.simpleCollision(false, true);
+            ball.addVelocity(50, 0);
         }
     }
 
