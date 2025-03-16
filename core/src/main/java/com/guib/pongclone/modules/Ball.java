@@ -1,4 +1,4 @@
-package com.guib.pongclone;
+package com.guib.pongclone.modules;
 
 import com.badlogic.gdx.math.Circle;
 

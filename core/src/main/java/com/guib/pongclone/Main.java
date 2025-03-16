@@ -2,11 +2,10 @@ package com.guib.pongclone;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
+import com.guib.pongclone.modules.Musics;
+import com.guib.pongclone.screens.Match;
+import com.guib.pongclone.screens.Menu;;
 
 /**
  * {@link ApplicationListener} implementation shared by all platforms.
@@ -16,7 +15,6 @@ public class Main extends ApplicationAdapter {
 
     private Texture imageIntroduction;
     private Texture textIntroduction;
-    private Texture background;
 
     private Menu menu;
     private Match match;
@@ -31,10 +29,10 @@ public class Main extends ApplicationAdapter {
         batch = new SpriteBatch();
 
         menu.create();
+        match.create();
 
         imageIntroduction = new Texture("sanic.png");
         textIntroduction = new Texture("pong....png");
-        background = new Texture("bg.jpg");
 
         boom = new Musics();
         boom.setBoom();
@@ -46,7 +44,8 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render() {
-        menu.render();
+//        menu.render();
+        match.render();
         /*batch.begin();
         batch.draw(imageIntroduction, 0, 0);
         batch.setColor(effects.fading(), effects.fading(), effects.fading(), 1f);
