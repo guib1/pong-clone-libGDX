@@ -1,4 +1,4 @@
-package com.guib.pongclone.screens;
+package com.guib.pongclone.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -10,12 +10,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.guib.pongclone.Main;
 
-public class Menu {
+public class StateMenu extends State {
     private Stage stage;
     private SpriteBatch batch;
     private Texture background;
+    private StateManager gsm;
 
+    public StateMenu(StateManager gsm) {
+        this.gsm = gsm;
+    }
+
+    @Override
     public void create() {
         batch = new SpriteBatch();
         background = new Texture("bg.jpg");
@@ -29,15 +36,16 @@ public class Menu {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("teste");
+                gsm.set(new StateMatch(gsm));
             }
         });
 
         stage.addActor(playButton);
 
-//        playButton.setPosition(Gdx.graphics.getWidth() / 2f - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f);
+        playButton.setPosition(Gdx.graphics.getWidth() / 2f - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f);
     }
 
+    @Override
     public void render() {
         float delta = Gdx.graphics.getDeltaTime();
 
@@ -51,6 +59,7 @@ public class Menu {
         stage.draw();
     }
 
+    @Override
     public void dispose() {
         stage.dispose();
         batch.dispose();

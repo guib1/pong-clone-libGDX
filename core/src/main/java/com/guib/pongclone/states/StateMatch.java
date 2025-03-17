@@ -1,4 +1,4 @@
-package com.guib.pongclone.screens;
+package com.guib.pongclone.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -15,7 +15,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.guib.pongclone.modules.Ball;
 import com.guib.pongclone.modules.Player;
 
-public class Match {
+public class StateMatch extends State{
+    private StateManager gsm;
     private SpriteBatch batch = new SpriteBatch();
     private Texture background;
     private ShapeRenderer shape;
@@ -29,7 +30,13 @@ public class Match {
 
     private Rectangle topBarRect;
     private Rectangle downBarRect;
+    private Rectangle middleBarRect;
 
+    public StateMatch(StateManager gsm) {
+        this.gsm = gsm;
+    }
+
+    @Override
     public void create() {
         batch = new SpriteBatch();
         background = new Texture("bg.jpg");
@@ -44,6 +51,7 @@ public class Match {
         font = new BitmapFont(Gdx.files.internal("font.fnt"));
     }
 
+    @Override
     public void render() {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -70,9 +78,11 @@ public class Match {
         shape.setColor(Color.WHITE);
         downBarRect = new Rectangle(0, 0, Gdx.graphics.getWidth(), 20);
         topBarRect = new Rectangle(0, Gdx.graphics.getHeight() - 20, Gdx.graphics.getWidth(), 20);
+        middleBarRect = new Rectangle(centerX - 5, 0, 10, Gdx.graphics.getHeight());
 
         shape.rect(topBarRect.x, topBarRect.y, topBarRect.width, topBarRect.height);
         shape.rect(downBarRect.x, downBarRect.y, downBarRect.width, downBarRect.height);
+        shape.rect(middleBarRect.x, middleBarRect.y, middleBarRect.width, middleBarRect.height);
         shape.end();
         shape.begin(ShapeRenderer.ShapeType.Filled);
         shape.setColor(Color.WHITE);
@@ -157,6 +167,7 @@ public class Match {
         }
     }
 
+    @Override
     public void dispose() {
         background.dispose();
         batch.dispose();

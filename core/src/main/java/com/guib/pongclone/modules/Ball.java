@@ -19,7 +19,7 @@ public class Ball {
 
     public void ballSpawn(float initialSpeed) {
         Random random = new Random();
-        float angle = random.nextFloat() * 2 * (float) Math.PI;
+        float angle = (float) (random.nextFloat() * Math.PI / 2 - Math.PI / 4);
         this.velocityX = (float) Math.cos(angle) * initialSpeed;
         this.velocityY = (float) Math.sin(angle) * initialSpeed;
     }
@@ -34,15 +34,6 @@ public class Ball {
         this.x = centerX;
         this.y = centerY;
         ballSpawn(initialSpeed);
-    }
-
-    public void addVelocity(float x, float y) {
-        if (this.x < 0){
-            velocityX += x * -1;
-        } else {
-            velocityX += x * 1;
-        }
-        velocityY += y;
     }
 
     public void simpleCollision(boolean x, boolean y) {

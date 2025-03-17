@@ -4,32 +4,34 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.guib.pongclone.modules.Musics;
-import com.guib.pongclone.screens.Match;
-import com.guib.pongclone.screens.Menu;;
+import com.guib.pongclone.states.StateManager;
+import com.guib.pongclone.states.StateMenu;
+import com.guib.pongclone.states.StateMatch;
 
 /**
  * {@link ApplicationListener} implementation shared by all platforms.
  */
 public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
+    private StateManager gsm;
 
     private Texture imageIntroduction;
     private Texture textIntroduction;
 
-    private Menu menu;
-    private Match match;
+    public StateMenu menu = new StateMenu(gsm);;
 
     private Musics boom;
     private Musics music;
 
     @Override
     public void create() {
-        menu = new Menu();
-        match = new Match();
+        gsm = new StateManager();
+        menu = new StateMenu(gsm);
         batch = new SpriteBatch();
 
-        menu.create();
-        match.create();
+        gsm.push(menu);
+
+        gsm.create();
 
         imageIntroduction = new Texture("sanic.png");
         textIntroduction = new Texture("pong....png");
@@ -44,8 +46,7 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render() {
-//        menu.render();
-        match.render();
+        gsm.render();
         /*batch.begin();
         batch.draw(imageIntroduction, 0, 0);
         batch.setColor(effects.fading(), effects.fading(), effects.fading(), 1f);
@@ -62,8 +63,7 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        menu.dispose();
-        match.dispose();
+        gsm.dispose();
         batch.dispose();
         imageIntroduction.dispose();
         textIntroduction.dispose();
