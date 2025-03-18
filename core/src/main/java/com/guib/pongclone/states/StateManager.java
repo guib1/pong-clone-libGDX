@@ -2,9 +2,9 @@ package com.guib.pongclone.states;
 
 import java.util.Stack;
 
-public class StateManager{
+public class StateManager {
 
-    private Stack<State> states;
+    private final Stack<State> states;
 
     public StateManager() {
         states = new Stack<State>();
@@ -12,11 +12,13 @@ public class StateManager{
 
     public void push(State state) {
         states.push(state);
+        states.peek().create();
     }
 
     public void pop() {
         if (!states.empty()) {
             states.pop().dispose();
+            states.peek().create();
         }
     }
 

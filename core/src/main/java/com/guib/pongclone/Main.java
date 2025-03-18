@@ -18,18 +18,15 @@ public class Main extends ApplicationAdapter {
     private Texture imageIntroduction;
     private Texture textIntroduction;
 
-    public StateMenu menu = new StateMenu(gsm);;
-
     private Musics boom;
     private Musics music;
 
     @Override
     public void create() {
         gsm = new StateManager();
-        menu = new StateMenu(gsm);
         batch = new SpriteBatch();
 
-        gsm.push(menu);
+        gsm.push(new StateMenu(gsm));
 
         gsm.create();
 
