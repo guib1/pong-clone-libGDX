@@ -7,6 +7,7 @@ import java.util.Random;
 public class Ball {
     private float x, y;
     private float velocityX, velocityY;
+    private final float BASE_SPEED = 550f;
     public Circle circ = new Circle();
 
     public int getX() {
@@ -19,8 +20,11 @@ public class Ball {
 
     public void ballSpawn(float initialSpeed) {
         Random random = new Random();
-        float angle = (float) (random.nextFloat() * Math.PI / 2 - Math.PI / 4);
-        this.velocityX = (float) Math.cos(angle) * initialSpeed;
+
+        float angle = (float) Math.toRadians(random.nextFloat() * 120 - 60);
+
+        int direction = random.nextBoolean() ? 1 : -1;
+        this.velocityX = (float) (Math.cos(angle) * initialSpeed) * direction;
         this.velocityY = (float) Math.sin(angle) * initialSpeed;
     }
 
@@ -50,10 +54,8 @@ public class Ball {
 
         impactPosition = Math.max(-1, Math.min(1, impactPosition));
 
-        float baseSpeed = 550;
-
-        this.velocityX = baseSpeed * alternator;
-        this.velocityY = impactPosition * baseSpeed;
+        this.velocityX = BASE_SPEED * alternator;
+        this.velocityY = impactPosition * BASE_SPEED;
     }
 
     public void update(float deltaTime) {

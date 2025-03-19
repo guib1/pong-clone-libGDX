@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.guib.pongclone.modules.Musics;
 import com.guib.pongclone.states.StateManager;
 import com.guib.pongclone.states.StateMenu;
-import com.guib.pongclone.states.StateMatch;
 
 /**
  * {@link ApplicationListener} implementation shared by all platforms.
@@ -18,26 +17,24 @@ public class Main extends ApplicationAdapter {
     private Texture imageIntroduction;
     private Texture textIntroduction;
 
-    private Musics boom;
     private Musics music;
 
     @Override
     public void create() {
         gsm = new StateManager();
         batch = new SpriteBatch();
+        music = new Musics();
 
-        gsm.push(new StateMenu(gsm));
+        gsm.push(new StateMenu(gsm, music));
 
         gsm.create();
 
         imageIntroduction = new Texture("sanic.png");
         textIntroduction = new Texture("pong....png");
 
-        boom = new Musics();
-        boom.setBoom();
-        boom.boom.setOnCompletionListener(musicc -> {
-            music = new Musics();
-            music.setMusic();
+        music.playBoom();
+        music.boom.setOnCompletionListener(musicc -> {
+            music.playMainMusic();
         });
     }
 
@@ -54,7 +51,7 @@ public class Main extends ApplicationAdapter {
         }
          */
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            Gdx.app.exit();
+            gsm.set(new StateMenu(gsm, music));
         }
     }
 

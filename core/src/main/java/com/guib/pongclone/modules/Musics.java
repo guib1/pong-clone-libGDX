@@ -5,17 +5,31 @@ import com.badlogic.gdx.audio.Music;
 
 public class Musics {
     public Music boom;
-    public Music music;
+    public Music mainMusic;
 
-    public void setBoom() {
+    public Musics() {
         boom = Gdx.audio.newMusic(Gdx.files.internal("boom.mp3"));
+        mainMusic = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
+        mainMusic.setLooping(true);
+
+        SetMusicVolume(0.5f);
+    }
+
+    public void SetMusicVolume(float volume) {
+            mainMusic.setVolume(volume);
+            boom.setVolume(volume);
+    }
+
+    public void playMainMusic() {
+        mainMusic.play();
+    }
+
+    public void playBoom() {
         boom.play();
     }
 
-    public void setMusic() {
-        music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
-        music.play();
-        music.setVolume(0.5f);
-        music.isLooping();
+    public void dispose() {
+        boom.dispose();
+        mainMusic.dispose();
     }
 }

@@ -1,9 +1,8 @@
-package com.guib.pongclone.states;
+package com.guib.pongclone.states.gameModes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -15,59 +14,22 @@ import com.badlogic.gdx.math.Rectangle;
 import com.guib.pongclone.modules.Ball;
 import com.guib.pongclone.modules.Player;
 
-public class StateMatch extends State{
-    private StateManager gsm;
-    private SpriteBatch batch = new SpriteBatch();
-    private Texture background;
-    private ShapeRenderer shape;
+public class MatchBase {
+    protected SpriteBatch batch = new SpriteBatch();
+    protected Texture background;
+    protected ShapeRenderer shape;
 
-    private Player player1;
-    private Player player2;
-    private Ball ball;
+    protected Player player1;
+    protected Player player2;
+    protected Ball ball;
 
-    private BitmapFont font;
-    private GlyphLayout glyphLayout;
+    protected BitmapFont font;
+    protected GlyphLayout glyphLayout;
 
-    private Rectangle topBarRect;
-    private Rectangle downBarRect;
-    private Rectangle middleBarRect;
+    protected Rectangle topBarRect;
+    protected Rectangle downBarRect;
 
-    public StateMatch(StateManager gsm) {
-        this.gsm = gsm;
-    }
-
-    @Override
-    public void create() {
-        batch = new SpriteBatch();
-        background = new Texture("bg.jpg");
-        shape = new ShapeRenderer();
-
-        player1 = new Player();
-        player2 = new Player();
-        ball = new Ball(0, 0, 350);
-
-        glyphLayout = new GlyphLayout();
-
-        font = new BitmapFont(Gdx.files.internal("font.fnt"));
-    }
-
-    @Override
-    public void render() {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.begin();
-        batch.setColor(0.5f, 0.5f, 0.5f, 1f);
-        batch.draw(background, 0, 0);
-        batch.end();
-
-        match();
-        ui();
-
-        pMovement();
-        collision();
-
-        ball.update(Gdx.graphics.getDeltaTime());
-    }
+    public final float PLAYER_SPEED = 700f;
 
     public void match() {
         float pCenterY = (Gdx.graphics.getHeight() - 70) / 2f;
@@ -78,7 +40,7 @@ public class StateMatch extends State{
         shape.setColor(Color.WHITE);
         downBarRect = new Rectangle(0, 0, Gdx.graphics.getWidth(), 20);
         topBarRect = new Rectangle(0, Gdx.graphics.getHeight() - 20, Gdx.graphics.getWidth(), 20);
-        middleBarRect = new Rectangle(centerX - 5, 0, 10, Gdx.graphics.getHeight());
+        Rectangle middleBarRect = new Rectangle(centerX - 5, 0, 10, Gdx.graphics.getHeight());
 
         shape.rect(topBarRect.x, topBarRect.y, topBarRect.width, topBarRect.height);
         shape.rect(downBarRect.x, downBarRect.y, downBarRect.width, downBarRect.height);
@@ -121,8 +83,6 @@ public class StateMatch extends State{
         batch.end();
     }
 
-    private final float PLAYER_SPEED = 700f;
-
     public void pMovement() {
         // players movement
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
@@ -155,19 +115,22 @@ public class StateMatch extends State{
         // Ball Collisions
         if (Intersector.overlaps(ball.circ, player1.rect)) {
             ball.playersCollision(player1, 1);
+            ball.circ.x = player1.rect.x + player1.rect.width + ball.circ.radius;
         }
         if (Intersector.overlaps(ball.circ, player2.rect)) {
             ball.playersCollision(player2, -1);
+            ball.circ.x = player2.rect.x - ball.circ.radius;
         }
         if (Intersector.overlaps(ball.circ, topBarRect)) {
             ball.simpleCollision(false, true);
+            ball.circ.y = topBarRect.y - ball.circ.radius;
         }
         if (Intersector.overlaps(ball.circ, downBarRect)) {
             ball.simpleCollision(false, true);
+            ball.circ.y = downBarRect.y + downBarRect.height + ball.circ.radius;
         }
     }
 
-    @Override
     public void dispose() {
         background.dispose();
         batch.dispose();

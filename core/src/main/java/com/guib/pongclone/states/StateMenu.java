@@ -10,6 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.guib.pongclone.modules.Musics;
+import com.guib.pongclone.states.subMenus.LocalModeMenu;
+import com.guib.pongclone.states.subMenus.OnlineModeMenu;
 import com.guib.pongclone.states.subMenus.StateOptionMenu;
 
 public class StateMenu extends State {
@@ -17,9 +20,11 @@ public class StateMenu extends State {
     private SpriteBatch batch;
     private Texture background;
     private final StateManager gsm;
+    private final Musics music;
 
-    public StateMenu(StateManager gsm) {
+    public StateMenu(StateManager gsm, Musics music) {
         this.gsm = gsm;
+        this.music = music;
     }
 
     @Override
@@ -31,21 +36,29 @@ public class StateMenu extends State {
 
         Skin skin = new Skin(Gdx.files.internal("skin/vhs-ui.json"));
 
-        TextButton playButton = new TextButton("PLAY", skin);
+        TextButton localModeButton = new TextButton("LOCAL", skin);
+        TextButton onlineModeButton = new TextButton("ONLINE", skin);
         TextButton optionsButton = new TextButton("OPTIONS", skin);
         TextButton exitButton = new TextButton("EXIT", skin);
 
-        playButton.addListener(new ClickListener() {
+        localModeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.set(new StateMatch(gsm));
+                gsm.push(new LocalModeMenu(gsm, music));
+            }
+        });
+
+        onlineModeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gsm.push(new OnlineModeMenu(gsm, music));
             }
         });
 
         optionsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.push(new StateOptionMenu(gsm));
+                gsm.push(new StateOptionMenu(gsm, music));
             }
         });
 
@@ -56,18 +69,25 @@ public class StateMenu extends State {
             }
         });
 
-        stage.addActor(playButton);
+        stage.addActor(localModeButton);
+        stage.addActor(onlineModeButton);
         stage.addActor(optionsButton);
         stage.addActor(exitButton);
 
-        float buttonHeight = playButton.getHeight();
-        float middleButtonY = Gdx.graphics.getHeight() / 2f - buttonHeight / 2f;
-        float topButtonY = middleButtonY + buttonHeight * 2f;
-        float bottomButtonY = middleButtonY - buttonHeight * 2f;
+        float buttonWidth = localModeButton.getWidth();
+        float buttonHeight = localModeButton.getHeight();
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        float totalButtonHeight = buttonHeight * 4;
+        float totalSpacing = buttonHeight * 0.5f * 3;
+        float totalHeight = totalButtonHeight + totalSpacing;
+        float startY = (screenHeight - totalHeight) / 2f;
+        float centerX = screenWidth / 2f - buttonWidth / 2f;
 
-        playButton.setPosition(Gdx.graphics.getWidth() / 2f - playButton.getWidth() / 2f,topButtonY);
-        optionsButton.setPosition(Gdx.graphics.getWidth() / 2f - optionsButton.getWidth() / 2f, middleButtonY);
-        exitButton.setPosition(Gdx.graphics.getWidth() / 2f - exitButton.getWidth() / 2f, bottomButtonY);
+        localModeButton.setPosition(centerX, startY + buttonHeight * 3 + buttonHeight * 0.5f * 3);
+        onlineModeButton.setPosition(centerX, startY + buttonHeight * 2 + buttonHeight * 0.5f * 2);
+        optionsButton.setPosition(centerX, startY + buttonHeight + buttonHeight * 0.5f);
+        exitButton.setPosition(centerX, startY);
     }
 
     @Override
