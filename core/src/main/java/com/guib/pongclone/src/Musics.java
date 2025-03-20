@@ -1,4 +1,4 @@
-package com.guib.pongclone.modules;
+package com.guib.pongclone.src;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;

@@ -1,10 +1,11 @@
-package com.guib.pongclone.modules;
+package com.guib.pongclone.src.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Player {
-    private float y, i = 0.1f;
+    private float y;
+    private final float i = 0.1f;
     private int score = 0;
     public Rectangle rect = new Rectangle();
 

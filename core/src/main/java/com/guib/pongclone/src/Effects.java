@@ -1,4 +1,4 @@
-package com.guib.pongclone.modules;
+package com.guib.pongclone.src;
 
 public class Effects {
     private float a = 0.0f;

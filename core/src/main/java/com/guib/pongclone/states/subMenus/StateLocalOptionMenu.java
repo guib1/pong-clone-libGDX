@@ -4,25 +4,26 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.guib.pongclone.src.Musics;
 import com.guib.pongclone.states.State;
 import com.guib.pongclone.states.StateManager;
+import com.guib.pongclone.states.game.StateSinglePlayerMatch;
 
-public class StateOptionMenu extends State {
+public class StateLocalOptionMenu extends State {
+    private final StateManager gsm;
+    private final Musics music;
     private Stage stage;
     private SpriteBatch batch;
     private Texture background;
-    private final StateManager gsm;
-    private final Musics music;
 
-    public StateOptionMenu(StateManager gsm, Musics music) {
+    public StateLocalOptionMenu(StateManager gsm, Musics music) {
         this.gsm = gsm;
         this.music = music;
     }
@@ -36,17 +37,15 @@ public class StateOptionMenu extends State {
 
         Skin skin = new Skin(Gdx.files.internal("skin/vhs-ui.json"));
 
-        CheckBox audioCheckBox = new CheckBox("AUDIO", skin);
-
+        TextButton playButton = new TextButton("PLAY", skin);
+        Label chooseSideLabel = new Label("CHOOSE SIDE", skin);
+        Label botDifficultyLabel = new Label("BOT DIFFICULTY", skin);
         TextButton backButton = new TextButton("BACK", skin);
 
-        audioCheckBox.setChecked(true);
-
-        audioCheckBox.addListener(new ChangeListener() {
+        playButton.addListener(new ClickListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                float musicVolume = (audioCheckBox.isChecked() ? 0.5f : 0f);
-                music.SetMusicVolume(musicVolume);
+            public void clicked(InputEvent event, float x, float y) {
+                gsm.set(new StateSinglePlayerMatch());
             }
         });
 
@@ -57,15 +56,18 @@ public class StateOptionMenu extends State {
             }
         });
 
-        stage.addActor(audioCheckBox);
+        stage.addActor(playButton);
+        stage.addActor(chooseSideLabel);
+        stage.addActor(botDifficultyLabel);
         stage.addActor(backButton);
 
-        float buttonHeight = backButton.getHeight();
+        float buttonHeight = playButton.getHeight();
         float middleButtonY = Gdx.graphics.getHeight() / 2f - buttonHeight / 2f;
+        float topButtonY = middleButtonY + buttonHeight * 2f;
         float bottomButtonY = middleButtonY - buttonHeight * 2f;
 
+        playButton.setPosition(Gdx.graphics.getWidth() / 2f - playButton.getWidth() / 2f,topButtonY);
         backButton.setPosition(Gdx.graphics.getWidth() / 2f - backButton.getWidth() / 2f, bottomButtonY);
-        audioCheckBox.setPosition(Gdx.graphics.getWidth() / 2f - audioCheckBox.getWidth() / 2f, middleButtonY);
     }
 
     @Override

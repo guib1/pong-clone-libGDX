@@ -1,4 +1,4 @@
-package com.guib.pongclone.states.gameModes;
+package com.guib.pongclone.src.match;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -11,56 +11,75 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
-import com.guib.pongclone.modules.Ball;
-import com.guib.pongclone.modules.Player;
+import com.guib.pongclone.src.entities.Ball;
+import com.guib.pongclone.src.entities.BotAi;
+import com.guib.pongclone.src.entities.Player;
 
-public class MatchBase {
-    protected SpriteBatch batch = new SpriteBatch();
-    protected Texture background;
-    protected ShapeRenderer shape;
-
-    protected Player player1;
-    protected Player player2;
-    protected Ball ball;
-
-    protected BitmapFont font;
-    protected GlyphLayout glyphLayout;
-
-    protected Rectangle topBarRect;
-    protected Rectangle downBarRect;
+public class MatchBase{
+    public final MatchBaseConfig matchConfig;
+    private final float centerY = Gdx.graphics.getHeight() / 2f;
+    private final float centerX = Gdx.graphics.getWidth() / 2f;
+    public SpriteBatch batch;
+    public Texture background;
+    public ShapeRenderer shape;
+    public Player player1;
+    public Player player2;
+    public BotAi bot;
+    public Ball ball;
+    public BitmapFont font;
+    public GlyphLayout glyphLayout;
 
     public final float PLAYER_SPEED = 700f;
+    public Rectangle topBarRect;
+    public Rectangle downBarRect;
+    public float pCenterY = (Gdx.graphics.getHeight() - 70) / 2f;
 
-    public void match() {
-        float pCenterY = (Gdx.graphics.getHeight() - 70) / 2f;
-        float centerY = Gdx.graphics.getHeight() / 2f;
-        float centerX = Gdx.graphics.getWidth() / 2f;
+    public MatchBase(){
+        matchConfig = new MatchBaseConfig(this);
+    }
 
-        shape.begin(ShapeRenderer.ShapeType.Filled);
-        shape.setColor(Color.WHITE);
+    public void staticBars() {
+        // those 2 have to be final because it'll be used in collisions
         downBarRect = new Rectangle(0, 0, Gdx.graphics.getWidth(), 20);
         topBarRect = new Rectangle(0, Gdx.graphics.getHeight() - 20, Gdx.graphics.getWidth(), 20);
         Rectangle middleBarRect = new Rectangle(centerX - 5, 0, 10, Gdx.graphics.getHeight());
 
+        shape.begin(ShapeRenderer.ShapeType.Filled);
+        shape.setColor(Color.WHITE);
         shape.rect(topBarRect.x, topBarRect.y, topBarRect.width, topBarRect.height);
         shape.rect(downBarRect.x, downBarRect.y, downBarRect.width, downBarRect.height);
         shape.rect(middleBarRect.x, middleBarRect.y, middleBarRect.width, middleBarRect.height);
         shape.end();
-        shape.begin(ShapeRenderer.ShapeType.Filled);
-        shape.setColor(Color.WHITE);
-        // start of the 2 players
+    }
+
+    public void twoPlayerMode() {
+        // those 2 have to be final because it'll be used in collisions
         player1.rect = new Rectangle(50, player1.getY() + pCenterY, 20, 70);
         player2.rect = new Rectangle(Gdx.graphics.getWidth() - 70, player2.getY() + pCenterY, 20, 70);
+
+        shape.begin(ShapeRenderer.ShapeType.Filled);
         shape.rect(player1.rect.x, player1.rect.y, player1.rect.width, player1.rect.height);
         shape.rect(player2.rect.x, player2.rect.y, player2.rect.width, player2.rect.height);
+        shape.setColor(Color.WHITE);
         shape.end();
+    }
+
+    public void singlePlayerMode() {
+        shape.begin(ShapeRenderer.ShapeType.Filled);
+        matchConfig.singlePlayerChooseSide(matchConfig.chooseSide);
+        shape.setColor(Color.WHITE);
+        shape.end();
+    }
+
+    public void setBall() {
+        ball.circ = new Circle(ball.getX() + centerX, ball.getY() + centerY, 10);
 
         shape.begin(ShapeRenderer.ShapeType.Filled);
         shape.setColor(Color.WHITE);
-        ball.circ = new Circle(ball.getX() + centerX, ball.getY() + centerY, 10);
         shape.circle(ball.circ.x, ball.circ.y, ball.circ.radius);
         shape.end();
 
+        // ball respawning after someone scores
         if (ball.circ.x > Gdx.graphics.getWidth()) {
             ball.resetPosition(0, 0, 350);
             player1.score(true);
@@ -83,8 +102,7 @@ public class MatchBase {
         batch.end();
     }
 
-    public void pMovement() {
-        // players movement
+    public void localPlayerMovement() {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             player1.movement(PLAYER_SPEED * player1.update());
         } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {

@@ -10,9 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.guib.pongclone.modules.Musics;
-import com.guib.pongclone.states.subMenus.LocalModeMenu;
-import com.guib.pongclone.states.subMenus.OnlineModeMenu;
+import com.guib.pongclone.src.Musics;
+import com.guib.pongclone.states.subMenus.StateLocalMenu;
+import com.guib.pongclone.states.subMenus.StateOnlineMenu;
 import com.guib.pongclone.states.subMenus.StateOptionMenu;
 
 public class StateMenu extends State {
@@ -44,14 +44,14 @@ public class StateMenu extends State {
         localModeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.push(new LocalModeMenu(gsm, music));
+                gsm.push(new StateLocalMenu(gsm, music));
             }
         });
 
         onlineModeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.push(new OnlineModeMenu(gsm, music));
+                gsm.push(new StateOnlineMenu(gsm, music));
             }
         });
 

@@ -3,7 +3,7 @@ package com.guib.pongclone;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.guib.pongclone.modules.Musics;
+import com.guib.pongclone.src.Musics;
 import com.guib.pongclone.states.StateManager;
 import com.guib.pongclone.states.StateMenu;
 
@@ -51,7 +51,7 @@ public class Main extends ApplicationAdapter {
         }
          */
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            gsm.set(new StateMenu(gsm, music));
+            gsm.pop();
         }
     }
 
