@@ -49,8 +49,8 @@ public class Ball {
         }
     }
 
-    public void playersCollision(Player player, int alternator) {
-        float impactPosition = (this.circ.y - (player.rect.y + player.rect.height / 2)) / (player.rect.height / 2);
+    public void paddleCollision(Paddle paddle, int alternator) {
+        float impactPosition = (this.circ.y - (paddle.rect.y + paddle.rect.height / 2)) / (paddle.rect.height / 2);
 
         impactPosition = Math.max(-1, Math.min(1, impactPosition));
 

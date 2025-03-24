@@ -39,6 +39,7 @@ public class StateLocalOptionMenu extends State {
 
         TextButton playButton = new TextButton("PLAY", skin);
         Label chooseSideLabel = new Label("CHOOSE SIDE", skin);
+        Label chooseKeysLabel = new Label("CHOOSE KEYS", skin);
         Label botDifficultyLabel = new Label("BOT DIFFICULTY", skin);
         TextButton backButton = new TextButton("BACK", skin);
 
@@ -58,6 +59,7 @@ public class StateLocalOptionMenu extends State {
 
         stage.addActor(playButton);
         stage.addActor(chooseSideLabel);
+        stage.addActor(chooseKeysLabel);
         stage.addActor(botDifficultyLabel);
         stage.addActor(backButton);
 

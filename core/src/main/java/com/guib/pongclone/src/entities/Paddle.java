@@ -1,9 +1,8 @@
 package com.guib.pongclone.src.entities;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Player {
+public class Paddle {
     private float y;
     private final float i = 0.1f;
     private int score = 0;
@@ -15,10 +14,6 @@ public class Player {
 
     public int getY() {
         return (int) this.y;
-    }
-
-    public float update() {
-        return Gdx.graphics.getDeltaTime();
     }
 
     public int score(boolean goal) {

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.guib.pongclone.src.entities.Ball;
-import com.guib.pongclone.src.entities.Player;
+import com.guib.pongclone.src.entities.Paddle;
 import com.guib.pongclone.src.match.MatchBase;
 import com.guib.pongclone.states.State;
 
@@ -21,8 +21,8 @@ public class StateTwoPlayerMatch extends State {
         match.background = new Texture("bg.jpg");
         match.shape = new ShapeRenderer();
 
-        match.player1 = new Player();
-        match.player2 = new Player();
+        match.player1 = new Paddle();
+        match.player2 = new Paddle();
         match.ball = new Ball(0, 0, 350);
 
         match.glyphLayout = new GlyphLayout();
@@ -44,7 +44,7 @@ public class StateTwoPlayerMatch extends State {
         match.setBall();
         match.ui();
 
-        match.localPlayerMovement();
+        match.localTwoPlayerMovement();
         match.collision();
 
         match.ball.update(Gdx.graphics.getDeltaTime());

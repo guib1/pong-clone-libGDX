@@ -12,19 +12,18 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.guib.pongclone.src.entities.Ball;
-import com.guib.pongclone.src.entities.BotAi;
-import com.guib.pongclone.src.entities.Player;
+import com.guib.pongclone.src.entities.Paddle;
 
-public class MatchBase{
+public class MatchBase {
     public final MatchBaseConfig matchConfig;
     private final float centerY = Gdx.graphics.getHeight() / 2f;
     private final float centerX = Gdx.graphics.getWidth() / 2f;
     public SpriteBatch batch;
     public Texture background;
     public ShapeRenderer shape;
-    public Player player1;
-    public Player player2;
-    public BotAi bot;
+    public Paddle player1;
+    public Paddle player2;
+    public Paddle bot;
     public Ball ball;
     public BitmapFont font;
     public GlyphLayout glyphLayout;
@@ -34,7 +33,7 @@ public class MatchBase{
     public Rectangle downBarRect;
     public float pCenterY = (Gdx.graphics.getHeight() - 70) / 2f;
 
-    public MatchBase(){
+    public MatchBase() {
         matchConfig = new MatchBaseConfig(this);
     }
 
@@ -102,42 +101,65 @@ public class MatchBase{
         batch.end();
     }
 
-    public void localPlayerMovement() {
+    public void localTwoPlayerMovement() {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            player1.movement(PLAYER_SPEED * player1.update());
+            player1.movement(PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            player1.movement(-PLAYER_SPEED * player1.update());
+            player1.movement(-PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            player2.movement(PLAYER_SPEED * player2.update());
+            player2.movement(PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             player2.movement(-PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+        }
+    }
+
+    public void localSinglePlayerMovement() {
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            player1.movement(PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            player1.movement(-PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+        }
+        if (bot.getY() < ball.getY() - 30) {
+            bot.movement(400 * Gdx.graphics.getDeltaTime());
+        } else if (bot.getY() > ball.getY() + 30) {
+            bot.movement(-400 * Gdx.graphics.getDeltaTime());
         }
     }
 
     public void collision() {
         // Vertical collision bars
         if (Intersector.overlaps(player1.rect, topBarRect)) {
-            player1.movement(-PLAYER_SPEED * player1.update());
+            player1.movement(-PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         }
         if (Intersector.overlaps(player1.rect, downBarRect)) {
-            player1.movement(PLAYER_SPEED * player1.update());
+            player1.movement(PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         }
         if (Intersector.overlaps(player2.rect, topBarRect)) {
-            player2.movement(-PLAYER_SPEED * player2.update());
+            player2.movement(-PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         }
         if (Intersector.overlaps(player2.rect, downBarRect)) {
-            player2.movement(PLAYER_SPEED * player2.update());
+            player2.movement(PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+        }
+        if (Intersector.overlaps(bot.rect, topBarRect)) {
+            bot.movement(-PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+        }
+        if (Intersector.overlaps(bot.rect, downBarRect)) {
+            bot.movement(PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         }
 
         // Ball Collisions
         if (Intersector.overlaps(ball.circ, player1.rect)) {
-            ball.playersCollision(player1, 1);
+            ball.paddleCollision(player1, 1);
             ball.circ.x = player1.rect.x + player1.rect.width + ball.circ.radius;
         }
         if (Intersector.overlaps(ball.circ, player2.rect)) {
-            ball.playersCollision(player2, -1);
+            ball.paddleCollision(player2, -1);
             ball.circ.x = player2.rect.x - ball.circ.radius;
+        }
+        if (Intersector.overlaps(ball.circ, bot.rect)) {
+            ball.paddleCollision(bot, -1);
+            ball.circ.x = bot.rect.x - ball.circ.radius;
         }
         if (Intersector.overlaps(ball.circ, topBarRect)) {
             ball.simpleCollision(false, true);
