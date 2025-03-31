@@ -10,10 +10,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.guib.pongclone.src.MenuLayout;
 import com.guib.pongclone.src.Musics;
 import com.guib.pongclone.states.subMenus.StateLocalMenu;
 import com.guib.pongclone.states.subMenus.StateOnlineMenu;
 import com.guib.pongclone.states.subMenus.StateOptionMenu;
+
+import java.awt.*;
 
 public class StateMenu extends State {
     private Stage stage;
@@ -69,25 +72,19 @@ public class StateMenu extends State {
             }
         });
 
-        stage.addActor(localModeButton);
-        stage.addActor(onlineModeButton);
-        stage.addActor(optionsButton);
-        stage.addActor(exitButton);
+        Object[] buttons = new Object[]{localModeButton, onlineModeButton, optionsButton, exitButton};
+        for (Object button : buttons) {
+            stage.addActor((TextButton) button);
+        }
 
-        float buttonWidth = localModeButton.getWidth();
-        float buttonHeight = localModeButton.getHeight();
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
-        float totalButtonHeight = buttonHeight * 4;
-        float totalSpacing = buttonHeight * 0.5f * 3;
-        float totalHeight = totalButtonHeight + totalSpacing;
-        float startY = (screenHeight - totalHeight) / 2f;
-        float centerX = screenWidth / 2f - buttonWidth / 2f;
+        float numberOfObjects = buttons.length;
 
-        localModeButton.setPosition(centerX, startY + buttonHeight * 3 + buttonHeight * 0.5f * 3);
-        onlineModeButton.setPosition(centerX, startY + buttonHeight * 2 + buttonHeight * 0.5f * 2);
-        optionsButton.setPosition(centerX, startY + buttonHeight + buttonHeight * 0.5f);
-        exitButton.setPosition(centerX, startY);
+        MenuLayout menuLayout = new MenuLayout(numberOfObjects);
+
+        localModeButton.setPosition(menuLayout.setX(localModeButton.getWidth()), menuLayout.setY(localModeButton.getHeight(), 1));
+        onlineModeButton.setPosition(menuLayout.setX(onlineModeButton.getWidth()), menuLayout.setY(onlineModeButton.getHeight(), 2));
+        optionsButton.setPosition(menuLayout.setX(optionsButton.getWidth()), menuLayout.setY(optionsButton.getHeight(), 3));
+        exitButton.setPosition(menuLayout.setX(exitButton.getWidth()), menuLayout.setY(exitButton.getHeight(), 4));
     }
 
     @Override

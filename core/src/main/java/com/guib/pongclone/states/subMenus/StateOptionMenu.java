@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.guib.pongclone.src.MenuLayout;
 import com.guib.pongclone.src.Musics;
 import com.guib.pongclone.states.State;
 import com.guib.pongclone.states.StateManager;
@@ -57,15 +58,17 @@ public class StateOptionMenu extends State {
             }
         });
 
-        stage.addActor(audioCheckBox);
-        stage.addActor(backButton);
+        Object[] buttons = new Object[]{audioCheckBox, backButton};
+        for (Object button : buttons) {
+            stage.addActor((TextButton) button);
+        }
 
-        float buttonHeight = backButton.getHeight();
-        float middleButtonY = Gdx.graphics.getHeight() / 2f - buttonHeight / 2f;
-        float bottomButtonY = middleButtonY - buttonHeight * 2f;
+        float numberOfObjects = buttons.length;
 
-        backButton.setPosition(Gdx.graphics.getWidth() / 2f - backButton.getWidth() / 2f, bottomButtonY);
-        audioCheckBox.setPosition(Gdx.graphics.getWidth() / 2f - audioCheckBox.getWidth() / 2f, middleButtonY);
+        MenuLayout menuLayout = new MenuLayout(numberOfObjects);
+
+        audioCheckBox.setPosition(menuLayout.setX(audioCheckBox.getWidth()), menuLayout.setY(audioCheckBox.getHeight(), 1));
+        backButton.setPosition(menuLayout.setX(backButton.getWidth()), menuLayout.setY(backButton.getHeight(), 2));
     }
 
     @Override

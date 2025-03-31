@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.guib.pongclone.src.MenuLayout;
 import com.guib.pongclone.src.Musics;
 import com.guib.pongclone.states.State;
 import com.guib.pongclone.states.StateManager;
@@ -63,13 +64,17 @@ public class StateLocalOptionMenu extends State {
         stage.addActor(botDifficultyLabel);
         stage.addActor(backButton);
 
-        float buttonHeight = playButton.getHeight();
-        float middleButtonY = Gdx.graphics.getHeight() / 2f - buttonHeight / 2f;
-        float topButtonY = middleButtonY + buttonHeight * 2f;
-        float bottomButtonY = middleButtonY - buttonHeight * 2f;
+        Object[] buttons = new Object[]{playButton, backButton};
+        for (Object button : buttons) {
+            stage.addActor((TextButton) button);
+        }
 
-        playButton.setPosition(Gdx.graphics.getWidth() / 2f - playButton.getWidth() / 2f,topButtonY);
-        backButton.setPosition(Gdx.graphics.getWidth() / 2f - backButton.getWidth() / 2f, bottomButtonY);
+        float numberOfObjects = buttons.length;
+
+        MenuLayout menuLayout = new MenuLayout(numberOfObjects);
+
+        playButton.setPosition(menuLayout.setX(playButton.getWidth()), menuLayout.setY(playButton.getHeight(), 1));
+        backButton.setPosition(menuLayout.setX(backButton.getWidth()), menuLayout.setY(backButton.getHeight(), 2));
     }
 
     @Override

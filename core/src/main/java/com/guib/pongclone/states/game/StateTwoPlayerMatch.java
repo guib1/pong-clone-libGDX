@@ -23,6 +23,7 @@ public class StateTwoPlayerMatch extends State {
 
         match.player1 = new Paddle();
         match.player2 = new Paddle();
+        match.bot = new Paddle();
         match.ball = new Ball(0, 0, 350);
 
         match.glyphLayout = new GlyphLayout();

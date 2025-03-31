@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.guib.pongclone.src.MenuLayout;
 import com.guib.pongclone.src.Musics;
 import com.guib.pongclone.states.State;
 import com.guib.pongclone.states.StateManager;
@@ -65,14 +66,18 @@ public class StateLocalMenu extends State {
         stage.addActor(twoPlayerModeButton);
         stage.addActor(backButton);
 
-        float buttonHeight = singlePlayerModeButton.getHeight();
-        float middleButtonY = Gdx.graphics.getHeight() / 2f - buttonHeight / 2f;
-        float topButtonY = middleButtonY + buttonHeight * 2f;
-        float bottomButtonY = middleButtonY - buttonHeight * 2f;
+        Object[] buttons = new Object[]{singlePlayerModeButton, twoPlayerModeButton, backButton};
+        for (Object button : buttons) {
+            stage.addActor((TextButton) button);
+        }
 
-        singlePlayerModeButton.setPosition(Gdx.graphics.getWidth() / 2f - singlePlayerModeButton.getWidth() / 2f,topButtonY);
-        twoPlayerModeButton.setPosition(Gdx.graphics.getWidth() / 2f - twoPlayerModeButton.getWidth() / 2f, middleButtonY);
-        backButton.setPosition(Gdx.graphics.getWidth() / 2f - backButton.getWidth() / 2f, bottomButtonY);
+        float numberOfObjects = buttons.length;
+
+        MenuLayout menuLayout = new MenuLayout(numberOfObjects);
+
+        singlePlayerModeButton.setPosition(menuLayout.setX(singlePlayerModeButton.getWidth()), menuLayout.setY(singlePlayerModeButton.getHeight(), 1));
+        twoPlayerModeButton.setPosition(menuLayout.setX(twoPlayerModeButton.getWidth()), menuLayout.setY(twoPlayerModeButton.getHeight(), 2));
+        backButton.setPosition(menuLayout.setX(backButton.getWidth()), menuLayout.setY(backButton.getHeight(), 3));
     }
 
     @Override
