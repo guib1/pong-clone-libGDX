@@ -4,15 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.guib.pongclone.src.MenuLayout;
 import com.guib.pongclone.src.Musics;
+import com.guib.pongclone.src.match.MatchBase;
+import com.guib.pongclone.src.match.MatchBaseConfig;
 import com.guib.pongclone.states.State;
 import com.guib.pongclone.states.StateManager;
 import com.guib.pongclone.states.game.StateSinglePlayerMatch;
@@ -39,15 +41,40 @@ public class StateLocalOptionMenu extends State {
         Skin skin = new Skin(Gdx.files.internal("skin/vhs-ui.json"));
 
         TextButton playButton = new TextButton("PLAY", skin);
-        Label chooseSideLabel = new Label("CHOOSE SIDE", skin);
-        Label chooseKeysLabel = new Label("CHOOSE KEYS", skin);
-        Label botDifficultyLabel = new Label("BOT DIFFICULTY", skin);
         TextButton backButton = new TextButton("BACK", skin);
+
+        Label labelDifficulty = new Label("SET DIFFICULTY:", skin);
+        CheckBox easy = new CheckBox("EASY", skin);
+        CheckBox medium = new CheckBox("MEDIUM", skin);
+        CheckBox hard = new CheckBox("HARD", skin);
+        ButtonGroup<CheckBox> difficulties = new ButtonGroup<>(easy, medium, hard);
+        Table difficultyTable = new Table();
+        difficultyTable.add(easy);
+        difficultyTable.add(medium);
+        difficultyTable.add(hard);
+
+        Label labelScore = new Label("SCORE TO WIN:", skin);
+        CheckBox score3 = new CheckBox("3", skin);
+        CheckBox score5 = new CheckBox("5", skin);
+        CheckBox score7 = new CheckBox("7", skin);
+        CheckBox score9 = new CheckBox("9", skin);
+        CheckBox score11 = new CheckBox("11", skin);
+        CheckBox score13 = new CheckBox("13", skin);
+        CheckBox score15 = new CheckBox("15", skin);
+        ButtonGroup<CheckBox> scores = new ButtonGroup<>(score3, score5, score9, score11, score13, score15);
+        Table scoresTable = new Table();
+        scoresTable.add(score3);
+        scoresTable.add(score5);
+        scoresTable.add(score7);
+        scoresTable.add(score9);
+        scoresTable.add(score11);
+        scoresTable.add(score13);
+        scoresTable.add(score15);
 
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.set(new StateSinglePlayerMatch());
+                gsm.set(new StateSinglePlayerMatch(new MatchBase(), new MatchBaseConfig(new MatchBase())));
             }
         });
 
@@ -58,23 +85,24 @@ public class StateLocalOptionMenu extends State {
             }
         });
 
+        difficultyTable.pack();
+        scoresTable.pack();
+
         stage.addActor(playButton);
-        stage.addActor(chooseSideLabel);
-        stage.addActor(chooseKeysLabel);
-        stage.addActor(botDifficultyLabel);
+        stage.addActor(labelScore);
+        stage.addActor(scoresTable);
+        stage.addActor(labelDifficulty);
+        stage.addActor(difficultyTable);
         stage.addActor(backButton);
 
-        Object[] buttons = new Object[]{playButton, backButton};
-        for (Object button : buttons) {
-            stage.addActor((TextButton) button);
-        }
+        MenuLayout menuLayout = new MenuLayout(6);
 
-        float numberOfObjects = buttons.length;
-
-        MenuLayout menuLayout = new MenuLayout(numberOfObjects);
-
-        playButton.setPosition(menuLayout.setX(playButton.getWidth()), menuLayout.setY(playButton.getHeight(), 1));
-        backButton.setPosition(menuLayout.setX(backButton.getWidth()), menuLayout.setY(backButton.getHeight(), 2));
+        playButton.setPosition(menuLayout.setX(playButton.getWidth()), menuLayout.setY(playButton.getHeight() - 3f, 1));
+        labelDifficulty.setPosition(menuLayout.setX(labelDifficulty.getWidth()), menuLayout.setY(labelDifficulty.getHeight(), 2));
+        difficultyTable.setPosition(menuLayout.setX(difficultyTable.getWidth()), menuLayout.setY(difficultyTable.getHeight(), 3));
+        labelScore.setPosition(menuLayout.setX(labelScore.getWidth()), menuLayout.setY(labelScore.getHeight(), 4));
+        scoresTable.setPosition(menuLayout.setX(scoresTable.getWidth()), menuLayout.setY(scoresTable.getHeight(), 5));
+        backButton.setPosition(menuLayout.setX(backButton.getWidth()), menuLayout.setY(backButton.getHeight(), 6));
     }
 
     @Override

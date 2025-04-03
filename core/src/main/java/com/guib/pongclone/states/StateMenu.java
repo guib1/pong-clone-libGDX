@@ -12,11 +12,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.guib.pongclone.src.MenuLayout;
 import com.guib.pongclone.src.Musics;
+import com.guib.pongclone.src.match.MatchBase;
+import com.guib.pongclone.src.match.MatchBaseConfig;
 import com.guib.pongclone.states.subMenus.StateLocalMenu;
 import com.guib.pongclone.states.subMenus.StateOnlineMenu;
 import com.guib.pongclone.states.subMenus.StateOptionMenu;
-
-import java.awt.*;
 
 public class StateMenu extends State {
     private Stage stage;
@@ -61,7 +61,7 @@ public class StateMenu extends State {
         optionsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.push(new StateOptionMenu(gsm, music));
+                gsm.push(new StateOptionMenu(gsm, music, new MatchBaseConfig(new MatchBase())));
             }
         });
 

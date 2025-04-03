@@ -27,8 +27,6 @@ public class MatchBase {
     public Ball ball;
     public BitmapFont font;
     public GlyphLayout glyphLayout;
-
-    public final float PLAYER_SPEED = 700f;
     public Rectangle topBarRect;
     public Rectangle downBarRect;
     public float pCenterY = (Gdx.graphics.getHeight() - 70) / 2f;
@@ -103,49 +101,36 @@ public class MatchBase {
 
     public void localTwoPlayerMovement() {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            player1.movement(PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player1.movement(matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            player1.movement(-PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player1.movement(-matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            player2.movement(PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player2.movement(matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            player2.movement(-PLAYER_SPEED * Gdx.graphics.getDeltaTime());
-        }
-    }
-
-    public void localSinglePlayerMovement() {
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            player1.movement(PLAYER_SPEED * Gdx.graphics.getDeltaTime());
-        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            player1.movement(-PLAYER_SPEED * Gdx.graphics.getDeltaTime());
-        }
-        if (bot.getY() < ball.getY() - 30) {
-            bot.movement(400 * Gdx.graphics.getDeltaTime());
-        } else if (bot.getY() > ball.getY() + 30) {
-            bot.movement(-400 * Gdx.graphics.getDeltaTime());
+            player2.movement(-matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         }
     }
 
     public void collision() {
         // Vertical collision bars
         if (Intersector.overlaps(player1.rect, topBarRect)) {
-            player1.movement(-PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player1.movement(-matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         }
         if (Intersector.overlaps(player1.rect, downBarRect)) {
-            player1.movement(PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player1.movement(matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         }
         if (Intersector.overlaps(player2.rect, topBarRect)) {
-            player2.movement(-PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player2.movement(-matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         }
         if (Intersector.overlaps(player2.rect, downBarRect)) {
-            player2.movement(PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player2.movement(matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         }
         if (Intersector.overlaps(bot.rect, topBarRect)) {
-            bot.movement(-PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            bot.movement(-matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         }
         if (Intersector.overlaps(bot.rect, downBarRect)) {
-            bot.movement(PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            bot.movement(matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
         }
 
         // Ball Collisions

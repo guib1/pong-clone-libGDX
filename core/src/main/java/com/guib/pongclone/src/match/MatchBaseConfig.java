@@ -9,8 +9,14 @@ public class MatchBaseConfig {
     // only for testing, it will be put at (StateLocalOptionMenu)
     public boolean chooseSide = true;
 
+    public float PLAYER_SPEED;
+
     public MatchBaseConfig(MatchBase match) {
         this.match = match;
+    }
+
+    public void setPLAYER_SPEED(float playerSpeed){
+        this.PLAYER_SPEED = playerSpeed;
     }
 
     public void singlePlayerChooseSide(boolean side) {
