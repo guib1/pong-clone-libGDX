@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.guib.pongclone.src.MenuLayout;
 import com.guib.pongclone.src.Musics;
+import com.guib.pongclone.src.match.MatchBaseConfig;
 import com.guib.pongclone.states.State;
 import com.guib.pongclone.states.StateManager;
 import com.guib.pongclone.states.game.StateTwoPlayerMatch;
@@ -21,11 +22,9 @@ public class StateLocalMenu extends State {
     private SpriteBatch batch;
     private Texture background;
     private final StateManager gsm;
-    private final Musics music;
 
-    public StateLocalMenu(StateManager gsm, Musics music) {
+    public StateLocalMenu(StateManager gsm) {
         this.gsm = gsm;
-        this.music = music;
     }
 
     @Override
@@ -44,7 +43,7 @@ public class StateLocalMenu extends State {
         singlePlayerModeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.push(new StateLocalOptionMenu(gsm, music));
+                gsm.push(new StateLocalOptionMenu(gsm));
             }
         });
 

@@ -2,8 +2,10 @@ package com.guib.pongclone.src;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.guib.pongclone.preferences.GeneralPreferences;
 
 public class Musics {
+    private GeneralPreferences generalPreferences = GeneralPreferences.getInstance();
     public Music boom;
     public Music mainMusic;
 
@@ -12,12 +14,8 @@ public class Musics {
         mainMusic = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
         mainMusic.setLooping(true);
 
-        SetMusicVolume(0.5f);
-    }
-
-    public void SetMusicVolume(float volume) {
-            mainMusic.setVolume(volume);
-            boom.setVolume(volume);
+        mainMusic.setVolume(generalPreferences.getMusicVolume());
+        boom.setVolume(generalPreferences.getMusicVolume());
     }
 
     public void playMainMusic() {

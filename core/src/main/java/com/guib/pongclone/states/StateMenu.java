@@ -23,11 +23,9 @@ public class StateMenu extends State {
     private SpriteBatch batch;
     private Texture background;
     private final StateManager gsm;
-    private final Musics music;
 
-    public StateMenu(StateManager gsm, Musics music) {
+    public StateMenu(StateManager gsm) {
         this.gsm = gsm;
-        this.music = music;
     }
 
     @Override
@@ -47,21 +45,21 @@ public class StateMenu extends State {
         localModeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.push(new StateLocalMenu(gsm, music));
+                gsm.push(new StateLocalMenu(gsm));
             }
         });
 
         onlineModeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.push(new StateOnlineMenu(gsm, music));
+                gsm.push(new StateOnlineMenu(gsm));
             }
         });
 
         optionsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.push(new StateOptionMenu(gsm, music, new MatchBaseConfig(new MatchBase())));
+                gsm.push(new StateOptionMenu(gsm));
             }
         });
 

@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.guib.pongclone.preferences.GeneralPreferences;
 import com.guib.pongclone.src.MenuLayout;
 import com.guib.pongclone.src.Musics;
 import com.guib.pongclone.src.match.MatchBaseConfig;
@@ -18,17 +19,15 @@ import com.guib.pongclone.states.State;
 import com.guib.pongclone.states.StateManager;
 
 public class StateOptionMenu extends State {
+    private final StateManager gsm;
+    private GeneralPreferences generalPreferences = GeneralPreferences.getInstance();
+
     private Stage stage;
     private SpriteBatch batch;
     private Texture background;
-    private final StateManager gsm;
-    private final Musics music;
-    private final MatchBaseConfig matchBaseConfig;
 
-    public StateOptionMenu(StateManager gsm, Musics music, MatchBaseConfig matchBaseConfig) {
+    public StateOptionMenu(StateManager gsm) {
         this.gsm = gsm;
-        this.music = music;
-        this.matchBaseConfig = matchBaseConfig;
     }
 
     @Override
@@ -68,7 +67,7 @@ public class StateOptionMenu extends State {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 float musicVolume = (audioCheckBox.isChecked() ? 0.5f : 0f);
-                music.SetMusicVolume(musicVolume);
+                generalPreferences.setMusicVolume(musicVolume);
             }
         });
 
@@ -76,11 +75,11 @@ public class StateOptionMenu extends State {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (low.isChecked()) {
-                    matchBaseConfig.setPLAYER_SPEED(300f);
+                    generalPreferences.setPlayerSpeed(300f);
                 } else if (medium.isChecked()) {
-                    matchBaseConfig.setPLAYER_SPEED(500f);
+                    generalPreferences.setPlayerSpeed(500f);
                 } else if (high.isChecked()) {
-                    matchBaseConfig.setPLAYER_SPEED(700f);
+                    generalPreferences.setPlayerSpeed(700f);
                 }
             }
         };

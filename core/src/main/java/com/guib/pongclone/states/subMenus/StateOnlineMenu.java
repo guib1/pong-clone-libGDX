@@ -6,11 +6,9 @@ import com.guib.pongclone.states.StateManager;
 
 public class StateOnlineMenu extends State {
     private final StateManager gsm;
-    private final Musics music;
 
-    public StateOnlineMenu(StateManager gsm, Musics music) {
+    public StateOnlineMenu(StateManager gsm) {
         this.gsm = gsm;
-        this.music = music;
     }
 
     @Override

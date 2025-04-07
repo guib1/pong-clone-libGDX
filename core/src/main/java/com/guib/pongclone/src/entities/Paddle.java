@@ -24,4 +24,8 @@ public class Paddle {
         }
         return this.score;
     }
+
+    public int getScore(){
+        return this.score;
+    }
 }

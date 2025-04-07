@@ -2,6 +2,9 @@ package com.guib.pongclone.src.match;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
+import com.guib.pongclone.src.Musics;
+import com.guib.pongclone.states.StateManager;
+import com.guib.pongclone.states.subMenus.StateOptionMenu;
 
 public class MatchBaseConfig {
     private final MatchBase match;
@@ -9,14 +12,8 @@ public class MatchBaseConfig {
     // only for testing, it will be put at (StateLocalOptionMenu)
     public boolean chooseSide = true;
 
-    public float PLAYER_SPEED;
-
     public MatchBaseConfig(MatchBase match) {
         this.match = match;
-    }
-
-    public void setPLAYER_SPEED(float playerSpeed){
-        this.PLAYER_SPEED = playerSpeed;
     }
 
     public void singlePlayerChooseSide(boolean side) {

@@ -21,14 +21,12 @@ import com.guib.pongclone.states.game.StateSinglePlayerMatch;
 
 public class StateLocalOptionMenu extends State {
     private final StateManager gsm;
-    private final Musics music;
     private Stage stage;
     private SpriteBatch batch;
     private Texture background;
 
-    public StateLocalOptionMenu(StateManager gsm, Musics music) {
+    public StateLocalOptionMenu(StateManager gsm) {
         this.gsm = gsm;
-        this.music = music;
     }
 
     @Override
@@ -74,7 +72,7 @@ public class StateLocalOptionMenu extends State {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.set(new StateSinglePlayerMatch(new MatchBase(), new MatchBaseConfig(new MatchBase())));
+                gsm.set(new StateSinglePlayerMatch(new MatchBase()));
             }
         });
 

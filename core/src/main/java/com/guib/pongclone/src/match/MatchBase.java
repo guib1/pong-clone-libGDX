@@ -11,11 +11,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import com.guib.pongclone.preferences.GeneralPreferences;
 import com.guib.pongclone.src.entities.Ball;
 import com.guib.pongclone.src.entities.Paddle;
 
 public class MatchBase {
-    public final MatchBaseConfig matchConfig;
+    private GeneralPreferences generalPreferences = GeneralPreferences.getInstance();
+
     private final float centerY = Gdx.graphics.getHeight() / 2f;
     private final float centerX = Gdx.graphics.getWidth() / 2f;
     public SpriteBatch batch;
@@ -30,10 +32,6 @@ public class MatchBase {
     public Rectangle topBarRect;
     public Rectangle downBarRect;
     public float pCenterY = (Gdx.graphics.getHeight() - 70) / 2f;
-
-    public MatchBase() {
-        matchConfig = new MatchBaseConfig(this);
-    }
 
     public void staticBars() {
         // those 2 have to be final because it'll be used in collisions
@@ -63,7 +61,11 @@ public class MatchBase {
 
     public void singlePlayerMode() {
         shape.begin(ShapeRenderer.ShapeType.Filled);
-        matchConfig.singlePlayerChooseSide(matchConfig.chooseSide);
+        player1.rect = new Rectangle(50, player1.getY() + pCenterY, 20, 70);
+        bot.rect = new Rectangle(Gdx.graphics.getWidth() - 70, bot.getY() + pCenterY, 20, 70);
+
+        shape.rect(player1.rect.x, player1.rect.y, player1.rect.width, player1.rect.height);
+        shape.rect(bot.rect.x, bot.rect.y, bot.rect.width, bot.rect.height);
         shape.setColor(Color.WHITE);
         shape.end();
     }
@@ -93,7 +95,6 @@ public class MatchBase {
         float textHeight = glyphLayout.height;
         float x = (Gdx.graphics.getWidth() - textWidth) / 2;
         float y = (Gdx.graphics.getHeight() + textHeight) / 2;
-
         batch.begin();
         font.draw(batch, glyphLayout, x, y + 180);
         batch.end();
@@ -101,36 +102,36 @@ public class MatchBase {
 
     public void localTwoPlayerMovement() {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            player1.movement(matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player1.movement(generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
         } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            player1.movement(-matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player1.movement(-generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            player2.movement(matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player2.movement(generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            player2.movement(-matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player2.movement(-generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
         }
     }
 
     public void collision() {
         // Vertical collision bars
         if (Intersector.overlaps(player1.rect, topBarRect)) {
-            player1.movement(-matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player1.movement(-generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
         }
         if (Intersector.overlaps(player1.rect, downBarRect)) {
-            player1.movement(matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player1.movement(generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
         }
         if (Intersector.overlaps(player2.rect, topBarRect)) {
-            player2.movement(-matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player2.movement(-generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
         }
         if (Intersector.overlaps(player2.rect, downBarRect)) {
-            player2.movement(matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            player2.movement(generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
         }
         if (Intersector.overlaps(bot.rect, topBarRect)) {
-            bot.movement(-matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            bot.movement(-generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
         }
         if (Intersector.overlaps(bot.rect, downBarRect)) {
-            bot.movement(matchConfig.PLAYER_SPEED * Gdx.graphics.getDeltaTime());
+            bot.movement(generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
         }
 
         // Ball Collisions
