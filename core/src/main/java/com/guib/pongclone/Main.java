@@ -5,10 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.guib.pongclone.preferences.GeneralPreferences;
 import com.guib.pongclone.src.Musics;
-import com.guib.pongclone.src.match.MatchBase;
-import com.guib.pongclone.src.match.MatchBaseConfig;
+import com.guib.pongclone.states.VideoIntro;
 import com.guib.pongclone.states.StateManager;
-import com.guib.pongclone.states.StateMenu;
 
 /**
  * {@link ApplicationListener} implementation shared by all platforms.
@@ -33,7 +31,7 @@ public class Main extends ApplicationAdapter {
 
         generalPreferences.load();
 
-        gsm.push(new StateMenu(gsm));
+        gsm.push(new VideoIntro(gsm));
         gsm.create();
 
         imageIntroduction = new Texture("sanic.png");

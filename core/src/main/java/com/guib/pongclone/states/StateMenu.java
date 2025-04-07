@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -19,6 +21,7 @@ public class StateMenu extends State {
     private Stage stage;
     private SpriteBatch batch;
     private Texture background;
+    private Texture logo;
     private final StateManager gsm;
 
     public StateMenu(StateManager gsm) {
@@ -29,11 +32,13 @@ public class StateMenu extends State {
     public void create() {
         batch = new SpriteBatch();
         background = new Texture("bg.jpg");
+        logo = new Texture("logo.png");
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
         Skin skin = new Skin(Gdx.files.internal("skin/vhs-ui.json"));
 
+        Image menuLogo = new Image(logo);
         TextButton localModeButton = new TextButton("LOCAL", skin);
         TextButton onlineModeButton = new TextButton("ONLINE", skin);
         TextButton optionsButton = new TextButton("OPTIONS", skin);
@@ -71,15 +76,19 @@ public class StateMenu extends State {
         for (Object button : buttons) {
             stage.addActor((TextButton) button);
         }
+        Table tableLogo = new Table();
+        tableLogo.add(menuLogo).width(170).height(170);
+        stage.addActor(tableLogo);
 
         float numberOfObjects = buttons.length;
 
-        MenuLayout menuLayout = new MenuLayout(numberOfObjects);
+        MenuLayout menuLayout = new MenuLayout(numberOfObjects + 1);
 
-        localModeButton.setPosition(menuLayout.setX(localModeButton.getWidth()), menuLayout.setY(localModeButton.getHeight(), 1));
-        onlineModeButton.setPosition(menuLayout.setX(onlineModeButton.getWidth()), menuLayout.setY(onlineModeButton.getHeight(), 2));
-        optionsButton.setPosition(menuLayout.setX(optionsButton.getWidth()), menuLayout.setY(optionsButton.getHeight(), 3));
-        exitButton.setPosition(menuLayout.setX(exitButton.getWidth()), menuLayout.setY(exitButton.getHeight(), 4));
+        tableLogo.setPosition(menuLayout.setX(tableLogo.getWidth()), menuLayout.setY(tableLogo.getHeight(), 1));
+        localModeButton.setPosition(menuLayout.setX(localModeButton.getWidth()), menuLayout.setY(localModeButton.getHeight(), 3));
+        onlineModeButton.setPosition(menuLayout.setX(onlineModeButton.getWidth()), menuLayout.setY(onlineModeButton.getHeight(), 4));
+        optionsButton.setPosition(menuLayout.setX(optionsButton.getWidth()), menuLayout.setY(optionsButton.getHeight(), 5));
+        exitButton.setPosition(menuLayout.setX(exitButton.getWidth()), menuLayout.setY(exitButton.getHeight(), 6));
     }
 
     @Override

@@ -73,7 +73,7 @@ public class StateOptionMenu extends State {
 
         // function to save the visual state of selected option
         CheckBox[] sensitivityCheckboxes = {low, medium, high};
-        float[] playerSpeed = {300f, 500f, 700f};
+        float[] playerSpeed = {300f, 500f, 650f};
         for (int i = 0; i < sensitivityCheckboxes.length; i++) {
             if (generalPreferences.getPlayerSpeed() == playerSpeed[i]) {
                 sensitivityCheckboxes[i].setChecked(true);
