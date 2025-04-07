@@ -19,14 +19,10 @@ import com.guib.pongclone.src.match.MatchBaseConfig;
 import com.guib.pongclone.states.State;
 
 public class StateSinglePlayerMatch extends State {
-    private final MatchBase match;
+    private final MatchBase match = new MatchBase();
     private GeneralPreferences generalPreferences;
 
     private boolean render = false;
-
-    public StateSinglePlayerMatch(MatchBase match) {
-        this.match = match;
-    }
 
     @Override
     public void create() {
@@ -62,69 +58,26 @@ public class StateSinglePlayerMatch extends State {
         match.staticBars();
         match.singlePlayerMode();
         match.ui();
+
         if (render) {
             match.setBall();
-            localSinglePlayerMovement();
-            collision();
+            match.localSinglePlayerMovement();
+            match.collision();
             match.ball.update(Gdx.graphics.getDeltaTime());
         }
+        endMatchCondition();
     }
 
-    public void localSinglePlayerMovement() {
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            match.player1.movement(generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
-        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            match.player1.movement(-generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
-        }
-        if (match.bot.getY() < match.ball.getY() - 30) {
-            match.bot.movement(400 * Gdx.graphics.getDeltaTime());
-        } else if (match.bot.getY() > match.ball.getY() + 30) {
-            match.bot.movement(-400 * Gdx.graphics.getDeltaTime());
-        }
-    }
-
-    public void collision() {
-        // Vertical collision bars
-        if (Intersector.overlaps(match.player1.rect, match.topBarRect)) {
-            match.player1.movement(-generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
-        }
-        if (Intersector.overlaps(match.player1.rect, match.downBarRect)) {
-            match.player1.movement(generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
-        }
-        if (Intersector.overlaps(match.bot.rect, match.topBarRect)) {
-            match.bot.movement(-generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
-        }
-        if (Intersector.overlaps(match.bot.rect, match.downBarRect)) {
-            match.bot.movement(generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
-        }
-
-        // Ball Collisions
-        if (Intersector.overlaps(match.ball.circ, match.player1.rect)) {
-            match.ball.paddleCollision(match.player1, 1);
-            match.ball.circ.x = match.player1.rect.x + match.player1.rect.width + match.ball.circ.radius;
-        }
-        if (Intersector.overlaps(match.ball.circ, match.bot.rect)) {
-            match.ball.paddleCollision(match.bot, -1);
-            match.ball.circ.x = match.bot.rect.x - match.ball.circ.radius;
-        }
-        if (Intersector.overlaps(match.ball.circ, match.topBarRect)) {
-            match.ball.simpleCollision(false, true);
-            match.ball.circ.y = match.topBarRect.y - match.ball.circ.radius;
-        }
-        if (Intersector.overlaps(match.ball.circ, match.downBarRect)) {
-            match.ball.simpleCollision(false, true);
-            match.ball.circ.y = match.downBarRect.y + match.downBarRect.height + match.ball.circ.radius;
-        }
-    }
-
-    public void endMatchCondition(){
-        if (match.player1.getScore() < generalPreferences.getScore()){
-
+    public void endMatchCondition() {
+        if (match.player1.getScore() >= generalPreferences.getScore()) {
+            render = false;
+        } else if (match.bot.getScore() >= generalPreferences.getScore()) {
+            render = false;
         }
     }
 
     @Override
     public void dispose() {
-
+        match.dispose();
     }
 }

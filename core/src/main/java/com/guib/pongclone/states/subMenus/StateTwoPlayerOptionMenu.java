@@ -13,10 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.guib.pongclone.preferences.GeneralPreferences;
 import com.guib.pongclone.src.MenuLayout;
+import com.guib.pongclone.src.match.MatchBase;
 import com.guib.pongclone.states.State;
 import com.guib.pongclone.states.StateManager;
+import com.guib.pongclone.states.game.StateTwoPlayerMatch;
 
-public class StateOptionMenu extends State {
+public class StateTwoPlayerOptionMenu extends State {
     private final StateManager gsm;
     private GeneralPreferences generalPreferences = GeneralPreferences.getInstance();
 
@@ -24,7 +26,7 @@ public class StateOptionMenu extends State {
     private SpriteBatch batch;
     private Texture background;
 
-    public StateOptionMenu(StateManager gsm) {
+    public StateTwoPlayerOptionMenu(StateManager gsm) {
         this.gsm = gsm;
     }
 
@@ -37,62 +39,61 @@ public class StateOptionMenu extends State {
 
         Skin skin = new Skin(Gdx.files.internal("skin/vhs-ui.json"));
 
-        Label labelSensitivity = new Label("SENSITIVITY:", skin);
-        CheckBox low = new CheckBox("LOW", skin);
-        CheckBox medium = new CheckBox("MEDIUM", skin);
-        CheckBox high = new CheckBox("HIGH", skin);
-        ButtonGroup<TextButton> sensitivity = new ButtonGroup<>(low, medium, high);
-        sensitivity.setMinCheckCount(1);
-        sensitivity.setMaxCheckCount(1);
-        Table sensitivityTable = new Table();
-        sensitivityTable.add(low);
-        sensitivityTable.add(medium);
-        sensitivityTable.add(high);
-
-        CheckBox audioCheckBox = new CheckBox("AUDIO", skin);
-
+        TextButton playButton = new TextButton("PLAY", skin);
         TextButton backButton = new TextButton("BACK", skin);
 
-        backButton.addListener(new ClickListener() {
+        Label labelScore = new Label("SCORE TO WIN:", skin);
+        CheckBox score3 = new CheckBox("3", skin);
+        CheckBox score5 = new CheckBox("5", skin);
+        CheckBox score7 = new CheckBox("7", skin);
+        CheckBox score9 = new CheckBox("9", skin);
+        CheckBox score11 = new CheckBox("11", skin);
+        CheckBox score13 = new CheckBox("13", skin);
+        CheckBox score15 = new CheckBox("15", skin);
+        ButtonGroup<CheckBox> scores = new ButtonGroup<>(score3, score5, score9, score11, score13, score15);
+        Table scoresTable = new Table();
+        scoresTable.add(score3);
+        scoresTable.add(score5);
+        scoresTable.add(score7);
+        scoresTable.add(score9);
+        scoresTable.add(score11);
+        scoresTable.add(score13);
+        scoresTable.add(score15);
+
+        playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.pop();
+                gsm.set(new StateTwoPlayerMatch());
             }
         });
 
         // function to save the visual state of selected option
-        float[] musicVolume = {0.5f, 0f};
-        audioCheckBox.setChecked(generalPreferences.getMusicVolume() == musicVolume[0]);
-
-        audioCheckBox.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                generalPreferences.setMusicVolume(musicVolume[audioCheckBox.isChecked() ? 0 : 1]);
-            }
-        });
-
-        // function to save the visual state of selected option
-        CheckBox[] sensitivityCheckboxes = {low, medium, high};
-        float[] playerSpeed = {300f, 500f, 700f};
-        for (int i = 0; i < sensitivityCheckboxes.length; i++) {
-            if (generalPreferences.getPlayerSpeed() == playerSpeed[i]) {
-                sensitivityCheckboxes[i].setChecked(true);
+        CheckBox[] scoreCheckboxes = {score3, score5, score7, score9, score11, score13, score15};
+        float[] score = {3f, 5f, 7f, 9f, 11f, 13f, 15f};
+        for (int i = 0; i < scoreCheckboxes.length; i++) {
+            if (generalPreferences.getScore() == score[i]) {
+                scoreCheckboxes[i].setChecked(true);
             }
         }
 
         ChangeListener sensitivityListener = new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                for (int i = 0; i < sensitivityCheckboxes.length; i++) {
-                    if (sensitivityCheckboxes[i].isChecked()){
-                        generalPreferences.setPlayerSpeed(playerSpeed[i]);
+                for (int i = 0; i < scoreCheckboxes.length; i++) {
+                    if (scoreCheckboxes[i].isChecked()) {
+                        generalPreferences.setScore(score[i]);
+                        break;
                     }
                 }
             }
         };
-        low.addListener(sensitivityListener);
-        medium.addListener(sensitivityListener);
-        high.addListener(sensitivityListener);
+        score3.addListener(sensitivityListener);
+        score5.addListener(sensitivityListener);
+        score7.addListener(sensitivityListener);
+        score9.addListener(sensitivityListener);
+        score11.addListener(sensitivityListener);
+        score13.addListener(sensitivityListener);
+        score15.addListener(sensitivityListener);
 
         backButton.addListener(new ClickListener() {
             @Override
@@ -101,18 +102,18 @@ public class StateOptionMenu extends State {
             }
         });
 
-        sensitivityTable.pack();
+        scoresTable.pack();
 
-        stage.addActor(labelSensitivity);
-        stage.addActor(sensitivityTable);
-        stage.addActor(audioCheckBox);
+        stage.addActor(playButton);
+        stage.addActor(labelScore);
+        stage.addActor(scoresTable);
         stage.addActor(backButton);
 
         MenuLayout menuLayout = new MenuLayout(4);
 
-        labelSensitivity.setPosition(menuLayout.setX(labelSensitivity.getWidth()), menuLayout.setY(labelSensitivity.getHeight(), 1));
-        sensitivityTable.setPosition(menuLayout.setX(sensitivityTable.getWidth()), menuLayout.setY(sensitivityTable.getHeight(), 2));
-        audioCheckBox.setPosition(menuLayout.setX(audioCheckBox.getWidth()), menuLayout.setY(audioCheckBox.getHeight(), 3));
+        playButton.setPosition(menuLayout.setX(playButton.getWidth()), menuLayout.setY(playButton.getHeight() - 3f, 1));
+        labelScore.setPosition(menuLayout.setX(labelScore.getWidth()), menuLayout.setY(labelScore.getHeight(), 2));
+        scoresTable.setPosition(menuLayout.setX(scoresTable.getWidth()), menuLayout.setY(scoresTable.getHeight(), 3));
         backButton.setPosition(menuLayout.setX(backButton.getWidth()), menuLayout.setY(backButton.getHeight(), 4));
     }
 
@@ -137,3 +138,4 @@ public class StateOptionMenu extends State {
         background.dispose();
     }
 }
+

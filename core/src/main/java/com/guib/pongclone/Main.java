@@ -31,9 +31,9 @@ public class Main extends ApplicationAdapter {
         batch = new SpriteBatch();
         music = new Musics();
 
-        gsm.push(new StateMenu(gsm));
-
         generalPreferences.load();
+
+        gsm.push(new StateMenu(gsm));
         gsm.create();
 
         imageIntroduction = new Texture("sanic.png");
@@ -48,6 +48,7 @@ public class Main extends ApplicationAdapter {
     @Override
     public void render() {
         gsm.render();
+        music.musicVolume();
         /*batch.begin();
         batch.draw(imageIntroduction, 0, 0);
         batch.setColor(effects.fading(), effects.fading(), effects.fading(), 1f);

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Timer;
 import com.guib.pongclone.preferences.GeneralPreferences;
 import com.guib.pongclone.src.entities.Ball;
 import com.guib.pongclone.src.entities.Paddle;
@@ -32,6 +33,7 @@ public class MatchBase {
     public Rectangle topBarRect;
     public Rectangle downBarRect;
     public float pCenterY = (Gdx.graphics.getHeight() - 70) / 2f;
+    private boolean goal = false;
 
     public void staticBars() {
         // those 2 have to be final because it'll be used in collisions
@@ -79,14 +81,29 @@ public class MatchBase {
         shape.end();
 
         // ball respawning after someone scores
-        if (ball.circ.x > Gdx.graphics.getWidth()) {
-            ball.resetPosition(0, 0, 350);
-            player1.score(true);
+        if (!goal) {
+            if (ball.circ.x > Gdx.graphics.getWidth()) {
+                player1.score(true);
+                setResetBallDelay();
+            }
+            if (ball.circ.x < 0) {
+                player2.score(true);
+                bot.score(true);
+                setResetBallDelay();
+            }
         }
-        if (ball.circ.x < 0) {
-            ball.resetPosition(0, 0, 350);
-            player2.score(true);
-        }
+    }
+
+    // ball have delay after goal has made
+    public void setResetBallDelay() {
+        goal = true;
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                ball.resetPosition(0, 0, 350);
+                goal = false;
+            }
+        }, 0.5f);
     }
 
     public void ui() {
@@ -98,6 +115,19 @@ public class MatchBase {
         batch.begin();
         font.draw(batch, glyphLayout, x, y + 180);
         batch.end();
+    }
+
+    public void localSinglePlayerMovement() {
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            player1.movement(generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
+        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            player1.movement(-generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
+        }
+        if (bot.getY() < ball.getY() - 30) {
+            bot.movement(generalPreferences.getBotDifficulty() * Gdx.graphics.getDeltaTime());
+        } else if (bot.getY() > ball.getY() + 30) {
+            bot.movement(-generalPreferences.getBotDifficulty() * Gdx.graphics.getDeltaTime());
+        }
     }
 
     public void localTwoPlayerMovement() {
@@ -128,10 +158,10 @@ public class MatchBase {
             player2.movement(generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
         }
         if (Intersector.overlaps(bot.rect, topBarRect)) {
-            bot.movement(-generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
+            bot.movement(-generalPreferences.getBotDifficulty() * Gdx.graphics.getDeltaTime());
         }
         if (Intersector.overlaps(bot.rect, downBarRect)) {
-            bot.movement(generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
+            bot.movement(generalPreferences.getBotDifficulty() * Gdx.graphics.getDeltaTime());
         }
 
         // Ball Collisions

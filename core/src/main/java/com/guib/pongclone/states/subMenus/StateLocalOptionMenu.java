@@ -8,19 +8,19 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.guib.pongclone.preferences.GeneralPreferences;
 import com.guib.pongclone.src.MenuLayout;
-import com.guib.pongclone.src.Musics;
-import com.guib.pongclone.src.match.MatchBase;
-import com.guib.pongclone.src.match.MatchBaseConfig;
 import com.guib.pongclone.states.State;
 import com.guib.pongclone.states.StateManager;
 import com.guib.pongclone.states.game.StateSinglePlayerMatch;
 
 public class StateLocalOptionMenu extends State {
     private final StateManager gsm;
+    private GeneralPreferences generalPreferences = GeneralPreferences.getInstance();
+
     private Stage stage;
     private SpriteBatch batch;
     private Texture background;
@@ -72,9 +72,59 @@ public class StateLocalOptionMenu extends State {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.set(new StateSinglePlayerMatch(new MatchBase()));
+                gsm.set(new StateSinglePlayerMatch());
             }
         });
+
+        CheckBox[] difficultyCheckboxes = {easy, medium, hard};
+        float[] difficulty = {300f, 450f, 700f};
+        for (int i = 0; i < difficultyCheckboxes.length; i++) {
+            if (generalPreferences.getBotDifficulty() == difficulty[i]) {
+                difficultyCheckboxes[i].setChecked(true);
+            }
+        }
+
+        ChangeListener difficultyListener = new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                for (int i = 0; i < difficultyCheckboxes.length; i++) {
+                    if (difficultyCheckboxes[i].isChecked()) {
+                        generalPreferences.setBotDifficulty(difficulty[i]);
+                        break;
+                    }
+                }
+            }
+        };
+        easy.addListener(difficultyListener);
+        medium.addListener(difficultyListener);
+        hard.addListener(difficultyListener);
+
+        CheckBox[] scoreCheckboxes = {score3, score5, score7, score9, score11, score13, score15};
+        float[] score = {3f, 5f, 7f, 9f, 11f, 13f, 15f};
+        for (int i = 0; i < scoreCheckboxes.length; i++) {
+            if (generalPreferences.getScore() == score[i]) {
+                scoreCheckboxes[i].setChecked(true);
+            }
+        }
+
+        ChangeListener scoreListener = new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                for (int i = 0; i < scoreCheckboxes.length; i++) {
+                    if (scoreCheckboxes[i].isChecked()) {
+                        generalPreferences.setScore(score[i]);
+                        break;
+                    }
+                }
+            }
+        };
+        score3.addListener(scoreListener);
+        score5.addListener(scoreListener);
+        score7.addListener(scoreListener);
+        score9.addListener(scoreListener);
+        score11.addListener(scoreListener);
+        score13.addListener(scoreListener);
+        score15.addListener(scoreListener);
 
         backButton.addListener(new ClickListener() {
             @Override

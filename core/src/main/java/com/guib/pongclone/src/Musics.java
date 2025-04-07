@@ -13,7 +13,9 @@ public class Musics {
         boom = Gdx.audio.newMusic(Gdx.files.internal("boom.mp3"));
         mainMusic = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
         mainMusic.setLooping(true);
+    }
 
+    public void musicVolume() {
         mainMusic.setVolume(generalPreferences.getMusicVolume());
         boom.setVolume(generalPreferences.getMusicVolume());
     }

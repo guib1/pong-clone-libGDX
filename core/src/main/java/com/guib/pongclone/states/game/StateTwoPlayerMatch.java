@@ -7,16 +7,22 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Timer;
+import com.guib.pongclone.preferences.GeneralPreferences;
 import com.guib.pongclone.src.entities.Ball;
 import com.guib.pongclone.src.entities.Paddle;
 import com.guib.pongclone.src.match.MatchBase;
 import com.guib.pongclone.states.State;
 
 public class StateTwoPlayerMatch extends State {
+    private GeneralPreferences generalPreferences;
     private final MatchBase match = new MatchBase();
+
+    private boolean render = false;
 
     @Override
     public void create() {
+        generalPreferences = GeneralPreferences.getInstance();
         match.batch = new SpriteBatch();
         match.background = new Texture("bg.jpg");
         match.shape = new ShapeRenderer();
@@ -25,6 +31,13 @@ public class StateTwoPlayerMatch extends State {
         match.player2 = new Paddle();
         match.bot = new Paddle();
         match.ball = new Ball(0, 0, 350);
+
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                render = true;
+            }
+        }, 1);
 
         match.glyphLayout = new GlyphLayout();
 
@@ -42,13 +55,24 @@ public class StateTwoPlayerMatch extends State {
 
         match.staticBars();
         match.twoPlayerMode();
-        match.setBall();
+
         match.ui();
 
-        match.localTwoPlayerMovement();
-        match.collision();
+        if (render) {
+            match.setBall();
+            match.localTwoPlayerMovement();
+            match.collision();
+            match.ball.update(Gdx.graphics.getDeltaTime());
+        }
+        endMatchCondition();
+    }
 
-        match.ball.update(Gdx.graphics.getDeltaTime());
+    public void endMatchCondition() {
+        if (match.player1.getScore() >= generalPreferences.getScore()) {
+            render = false;
+        } else if (match.player2.getScore() >= generalPreferences.getScore()) {
+            render = false;
+        }
     }
 
     @Override

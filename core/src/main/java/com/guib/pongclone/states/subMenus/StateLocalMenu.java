@@ -50,7 +50,7 @@ public class StateLocalMenu extends State {
         twoPlayerModeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.set(new StateTwoPlayerMatch());
+                gsm.push(new StateTwoPlayerOptionMenu(gsm));
             }
         });
 
