@@ -1,4 +1,4 @@
 # Pong Clone - libGDX
 
-## Requisits
+## Requisites
 - Java JDK 8+
