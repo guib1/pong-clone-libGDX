@@ -1,7 +1,6 @@
 package com.guib.pongclone.src.entities;
 
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.utils.Timer;
 
 import java.util.Random;
 

@@ -110,5 +110,6 @@ public class StateMenu extends State {
         stage.dispose();
         batch.dispose();
         background.dispose();
+        logo.dispose();
     }
 }

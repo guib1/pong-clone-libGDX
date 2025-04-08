@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.guib.pongclone.preferences.GeneralPreferences;
 import com.guib.pongclone.src.entities.Ball;
 import com.guib.pongclone.src.entities.Paddle;
-import com.guib.pongclone.src.match.MatchBase;
+import com.guib.pongclone.src.MatchBase;
 import com.guib.pongclone.states.State;
 
 public class StateTwoPlayerMatch extends State {
@@ -77,6 +77,6 @@ public class StateTwoPlayerMatch extends State {
 
     @Override
     public void dispose() {
-
+        match.dispose();
     }
 }

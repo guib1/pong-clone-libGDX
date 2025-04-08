@@ -1,7 +1,6 @@
 package com.guib.pongclone;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.guib.pongclone.preferences.GeneralPreferences;
 import com.guib.pongclone.src.Musics;
@@ -14,10 +13,6 @@ import com.guib.pongclone.states.StateManager;
 public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
     private StateManager gsm;
-
-    private Texture imageIntroduction;
-    private Texture textIntroduction;
-
     private Musics music;
 
     private GeneralPreferences generalPreferences;
@@ -29,33 +24,19 @@ public class Main extends ApplicationAdapter {
         batch = new SpriteBatch();
         music = new Musics();
 
-        generalPreferences.load();
-
-        gsm.push(new VideoIntro(gsm));
         gsm.create();
+        gsm.push(new VideoIntro(gsm));
 
-        imageIntroduction = new Texture("sanic.png");
-        textIntroduction = new Texture("pong....png");
+        music.boom.play();
+        music.mainMusic.play();
 
-        music.playBoom();
-        music.boom.setOnCompletionListener(musicc -> {
-            music.playMainMusic();
-        });
+        generalPreferences.load();
     }
 
     @Override
     public void render() {
         gsm.render();
         music.musicVolume();
-        /*batch.begin();
-        batch.draw(imageIntroduction, 0, 0);
-        batch.setColor(effects.fading(), effects.fading(), effects.fading(), 1f);
-        batch.draw(textIntroduction, 0, 0);
-        batch.end();
-        if (!boom.boom.isPlaying()) {
-            inGame();
-        }
-         */
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             gsm.pop();
         }
@@ -65,7 +46,6 @@ public class Main extends ApplicationAdapter {
     public void dispose() {
         gsm.dispose();
         batch.dispose();
-        imageIntroduction.dispose();
-        textIntroduction.dispose();
+        music.dispose();
     }
 }

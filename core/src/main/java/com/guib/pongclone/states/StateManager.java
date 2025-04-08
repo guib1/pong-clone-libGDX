@@ -1,16 +1,29 @@
 package com.guib.pongclone.states;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.guib.pongclone.src.Effects;
+
 import java.util.Stack;
 
 public class StateManager {
+    private final Texture blackScreen;
+    private final SpriteBatch batch = new SpriteBatch();
+    private final Effects effect = new Effects();
 
     private final Stack<State> states;
 
     public StateManager() {
         states = new Stack<State>();
+        blackScreen = new Texture(Gdx.files.internal("black_screen.png"));
     }
 
     public void push(State state) {
+        /*batch.begin();
+        batch.draw(blackScreen, 0, 0);
+        batch.setColor(0.8f, 0.8f, 0.8f, 1);
+        batch.end();*/
         states.push(state);
         states.peek().create();
     }

@@ -1,21 +1,17 @@
 package com.guib.pongclone.states.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.utils.Timer;
 import com.guib.pongclone.preferences.GeneralPreferences;
 import com.guib.pongclone.src.entities.Ball;
 import com.guib.pongclone.src.entities.Paddle;
-import com.guib.pongclone.src.match.MatchBase;
-import com.guib.pongclone.src.match.MatchBaseConfig;
+import com.guib.pongclone.src.MatchBase;
 import com.guib.pongclone.states.State;
 
 public class StateSinglePlayerMatch extends State {

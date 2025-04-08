@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.guib.pongclone.preferences.GeneralPreferences;
 import com.guib.pongclone.src.MenuLayout;
-import com.guib.pongclone.src.match.MatchBase;
 import com.guib.pongclone.states.State;
 import com.guib.pongclone.states.StateManager;
 import com.guib.pongclone.states.game.StateTwoPlayerMatch;

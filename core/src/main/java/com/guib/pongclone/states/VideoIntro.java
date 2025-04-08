@@ -9,37 +9,47 @@ import com.badlogic.gdx.video.VideoPlayerCreator;
 
 import java.io.FileNotFoundException;
 
-public class VideoIntro{
+public class VideoIntro extends State {
+    private final StateManager gsm;
+
     private SpriteBatch batch;
     private VideoPlayer videoPlayer;
 
+    public VideoIntro(StateManager gsm) {
+        this.gsm = gsm;
+    }
+
+    @Override
     public void create() {
         batch = new SpriteBatch();
-
         videoPlayer = VideoPlayerCreator.createVideoPlayer();
 
         try {
-            videoPlayer.play(Gdx.files.local("intro.mp4"));
+            videoPlayer.play(Gdx.files.internal("intro.webm"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
+    @Override
     public void render() {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         videoPlayer.update();
-
         Texture video = videoPlayer.getTexture();
-        if (video != null) {
-            batch.begin();
-            batch.draw(video, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            batch.end();
+
+        batch.begin();
+        batch.draw(video, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.end();
+        if (!videoPlayer.isPlaying()) {
+            gsm.push(new StateMenu(gsm));
         }
     }
 
+    @Override
     public void dispose() {
         batch.dispose();
+        videoPlayer.dispose();
     }
 }
