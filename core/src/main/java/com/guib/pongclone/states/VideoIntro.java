@@ -21,6 +21,7 @@ public class VideoIntro extends State {
 
     @Override
     public void create() {
+        gsm.setRichPresence("Loading", "Loading Game", "loading", true);
         batch = new SpriteBatch();
         videoPlayer = VideoPlayerCreator.createVideoPlayer();
 

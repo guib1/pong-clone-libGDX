@@ -1,6 +1,7 @@
 package com.guib.pongclone.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,17 +13,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.guib.pongclone.src.Effects;
 import com.guib.pongclone.src.MenuLayout;
 import com.guib.pongclone.states.subMenus.StateLocalMenu;
 import com.guib.pongclone.states.subMenus.StateOnlineMenu;
 import com.guib.pongclone.states.subMenus.StateOptionMenu;
 
 public class StateMenu extends State {
+    private final StateManager gsm;
+
     private Stage stage;
     private SpriteBatch batch;
     private Texture background;
     private Texture logo;
-    private final StateManager gsm;
+    private Effects effect = new Effects();
 
     public StateMenu(StateManager gsm) {
         this.gsm = gsm;
@@ -30,6 +34,7 @@ public class StateMenu extends State {
 
     @Override
     public void create() {
+        gsm.setRichPresence("On menus", "Main Menu", "", false);
         batch = new SpriteBatch();
         background = new Texture("bg.jpg");
         logo = new Texture("logo.png");
@@ -103,6 +108,12 @@ public class StateMenu extends State {
 
         stage.act(delta);
         stage.draw();
+
+        effect.setFadeInOrOut(1, 0.01f);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            Gdx.app.exit();
+        }
     }
 
     @Override

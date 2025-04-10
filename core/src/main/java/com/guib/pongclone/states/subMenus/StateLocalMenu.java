@@ -27,6 +27,7 @@ public class StateLocalMenu extends State {
 
     @Override
     public void create() {
+        gsm.setRichPresence("On menus", "Local Mode Menu", "", false);
         batch = new SpriteBatch();
         background = new Texture("bg.jpg");
         stage = new Stage(new ScreenViewport());
@@ -41,7 +42,7 @@ public class StateLocalMenu extends State {
         singlePlayerModeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.push(new StateLocalOptionMenu(gsm));
+                gsm.push(new StateSinglePlayerOptionMenu(gsm));
             }
         });
 

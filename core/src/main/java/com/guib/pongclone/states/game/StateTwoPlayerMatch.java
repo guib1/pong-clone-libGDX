@@ -13,12 +13,18 @@ import com.guib.pongclone.src.entities.Ball;
 import com.guib.pongclone.src.entities.Paddle;
 import com.guib.pongclone.src.MatchBase;
 import com.guib.pongclone.states.State;
+import com.guib.pongclone.states.StateManager;
 
 public class StateTwoPlayerMatch extends State {
+    private final StateManager gsm;
     private GeneralPreferences generalPreferences;
     private final MatchBase match = new MatchBase();
 
     private boolean render = false;
+
+    public StateTwoPlayerMatch(StateManager gsm) {
+        this.gsm = gsm;
+    }
 
     @Override
     public void create() {
@@ -40,7 +46,6 @@ public class StateTwoPlayerMatch extends State {
         }, 1);
 
         match.glyphLayout = new GlyphLayout();
-
         match.font = new BitmapFont(Gdx.files.internal("font.fnt"));
     }
 
@@ -55,9 +60,8 @@ public class StateTwoPlayerMatch extends State {
 
         match.staticBars();
         match.twoPlayerMode();
-
         match.ui();
-
+        gsm.setRichPresence("LOCAL | 2 Player Match", getThisMatchScore(), "playing", true);
         if (render) {
             match.setBall();
             match.localTwoPlayerMovement();
@@ -68,11 +72,21 @@ public class StateTwoPlayerMatch extends State {
     }
 
     public void endMatchCondition() {
+        StateEndMatchCondition stateEndMatchCondition = new StateEndMatchCondition(gsm);
         if (match.player1.getScore() >= generalPreferences.getScore()) {
-            render = false;
-        } else if (match.player2.getScore() >= generalPreferences.getScore()) {
-            render = false;
+            stateEndMatchCondition.setWinnerMultiPlayer(true);
+            gsm.push(stateEndMatchCondition);
         }
+        if (match.player2.getScore() >= generalPreferences.getScore()) {
+            stateEndMatchCondition.setWinnerMultiPlayer(false);
+            gsm.push(stateEndMatchCondition);
+        }
+    }
+
+    public String getThisMatchScore() {
+        String player1Score = Integer.toString(match.player1.getScore());
+        String player2Score = Integer.toString(match.player2.getScore());
+        return player1Score + " x " + player2Score;
     }
 
     @Override

@@ -15,16 +15,15 @@ public class Main extends ApplicationAdapter {
     private StateManager gsm;
     private Musics music;
 
-    private GeneralPreferences generalPreferences;
-
     @Override
     public void create() {
-        generalPreferences = GeneralPreferences.getInstance();
+        GeneralPreferences generalPreferences = GeneralPreferences.getInstance();
         gsm = new StateManager();
         batch = new SpriteBatch();
         music = new Musics();
 
         gsm.create();
+        gsm.startRichPresenceTimeStamp();
         gsm.push(new VideoIntro(gsm));
 
         music.boom.play();
@@ -37,9 +36,6 @@ public class Main extends ApplicationAdapter {
     public void render() {
         gsm.render();
         music.musicVolume();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            gsm.pop();
-        }
     }
 
     @Override

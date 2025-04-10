@@ -30,6 +30,7 @@ public class StateOptionMenu extends State {
 
     @Override
     public void create() {
+        gsm.setRichPresence("On menus", "Main Options Menu", "", false);
         batch = new SpriteBatch();
         background = new Texture("bg.jpg");
         stage = new Stage(new ScreenViewport());

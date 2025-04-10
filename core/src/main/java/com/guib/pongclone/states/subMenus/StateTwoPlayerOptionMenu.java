@@ -19,7 +19,7 @@ import com.guib.pongclone.states.game.StateTwoPlayerMatch;
 
 public class StateTwoPlayerOptionMenu extends State {
     private final StateManager gsm;
-    private GeneralPreferences generalPreferences = GeneralPreferences.getInstance();
+    private GeneralPreferences generalPreferences;
 
     private Stage stage;
     private SpriteBatch batch;
@@ -31,6 +31,9 @@ public class StateTwoPlayerOptionMenu extends State {
 
     @Override
     public void create() {
+        gsm.setRichPresence("On menus", "TwoPlayer Mode Menu", "", false);
+        generalPreferences = GeneralPreferences.getInstance();
+
         batch = new SpriteBatch();
         background = new Texture("bg.jpg");
         stage = new Stage(new ScreenViewport());
@@ -62,7 +65,7 @@ public class StateTwoPlayerOptionMenu extends State {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.set(new StateTwoPlayerMatch());
+                gsm.set(new StateTwoPlayerMatch(gsm));
             }
         });
 
