@@ -1,6 +1,7 @@
 package com.guib.pongclone.states.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -21,6 +22,8 @@ public class StateTwoPlayerMatch extends State {
     private final MatchBase match = new MatchBase();
 
     private boolean render = false;
+
+    private int a  = 0, b = 0;
 
     public StateTwoPlayerMatch(StateManager gsm) {
         this.gsm = gsm;
@@ -47,6 +50,7 @@ public class StateTwoPlayerMatch extends State {
 
         match.glyphLayout = new GlyphLayout();
         match.font = new BitmapFont(Gdx.files.internal("font.fnt"));
+        gsm.setRichPresence("LOCAL | 2 Player Match", getThisMatchScore(), "playing", true);
     }
 
     @Override
@@ -58,10 +62,18 @@ public class StateTwoPlayerMatch extends State {
         match.batch.draw(match.background, 0, 0);
         match.batch.end();
 
+        if (match.player1.getScore() > a){
+            this.a++;
+            gsm.setRichPresence("LOCAL | 2 Player Match", getThisMatchScore(), "playing", true);
+        }
+        if (match.player2.getScore() > b) {
+            this.b++;
+            gsm.setRichPresence("LOCAL | 2 Player Match", getThisMatchScore(), "playing", true);
+        }
+
         match.staticBars();
         match.twoPlayerMode();
         match.ui();
-        gsm.setRichPresence("LOCAL | 2 Player Match", getThisMatchScore(), "playing", true);
         if (render) {
             match.setBall();
             match.localTwoPlayerMovement();
@@ -69,6 +81,9 @@ public class StateTwoPlayerMatch extends State {
             match.ball.update(Gdx.graphics.getDeltaTime());
         }
         endMatchCondition();
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            gsm.pop();
+        }
     }
 
     public void endMatchCondition() {

@@ -23,6 +23,8 @@ public class StateSinglePlayerMatch extends State {
 
     private boolean render = false;
 
+    private int a  = 0, b = 0;
+
     public StateSinglePlayerMatch(StateManager gsm) {
         this.gsm = gsm;
     }
@@ -47,6 +49,7 @@ public class StateSinglePlayerMatch extends State {
 
         match.glyphLayout = new GlyphLayout();
         match.font = new BitmapFont(Gdx.files.internal("font.fnt"));
+        gsm.setRichPresence("LOCAL | 2 Player Match", getThisMatchScore(), "playing", true);
     }
 
     @Override
@@ -58,10 +61,18 @@ public class StateSinglePlayerMatch extends State {
         match.batch.draw(match.background, 0, 0);
         match.batch.end();
 
+        if (match.player1.getScore() > a){
+            this.a++;
+            gsm.setRichPresence("LOCAL | 2 Player Match", getThisMatchScore(), "playing", true);
+        }
+        if (match.player2.getScore() > b) {
+            this.b++;
+            gsm.setRichPresence("LOCAL | 2 Player Match", getThisMatchScore(), "playing", true);
+        }
+
         match.staticBars();
         match.singlePlayerMode();
         match.ui();
-        gsm.setRichPresence("LOCAL | SinglePlayer Match", getThisMatchScore(), "playing", true);
         if (render) {
             match.setBall();
             match.localSinglePlayerMovement();
@@ -69,6 +80,9 @@ public class StateSinglePlayerMatch extends State {
             match.ball.update(Gdx.graphics.getDeltaTime());
         }
         endMatchCondition();
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            gsm.pop();
+        }
     }
 
     public void endMatchCondition() {

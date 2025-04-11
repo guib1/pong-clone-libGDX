@@ -17,6 +17,8 @@ import com.guib.pongclone.states.State;
 import com.guib.pongclone.states.StateManager;
 import com.guib.pongclone.states.game.StateSinglePlayerMatch;
 
+import java.util.*;
+
 public class StateSinglePlayerOptionMenu extends State {
     private final StateManager gsm;
     private GeneralPreferences generalPreferences = GeneralPreferences.getInstance();
@@ -53,22 +55,16 @@ public class StateSinglePlayerOptionMenu extends State {
         difficultyTable.add(hard);
 
         Label labelScore = new Label("SCORE TO WIN:", skin);
-        CheckBox score3 = new CheckBox("3", skin);
-        CheckBox score5 = new CheckBox("5", skin);
-        CheckBox score7 = new CheckBox("7", skin);
-        CheckBox score9 = new CheckBox("9", skin);
-        CheckBox score11 = new CheckBox("11", skin);
-        CheckBox score13 = new CheckBox("13", skin);
-        CheckBox score15 = new CheckBox("15", skin);
-        ButtonGroup<CheckBox> scores = new ButtonGroup<>(score3, score5, score9, score11, score13, score15);
+        ArrayList<CheckBox> scores = new ArrayList<>();
+        for (int i = 3; i <= 15; i += 2) {
+            scores.add(new CheckBox(Integer.toString(i), skin));
+        }
+        ButtonGroup<CheckBox> score = new ButtonGroup<>(scores.get(0), scores.get(1), scores.get(2), scores.get(3), scores.get(4), scores.get(5), scores.get(6));
         Table scoresTable = new Table();
-        scoresTable.add(score3);
-        scoresTable.add(score5);
-        scoresTable.add(score7);
-        scoresTable.add(score9);
-        scoresTable.add(score11);
-        scoresTable.add(score13);
-        scoresTable.add(score15);
+
+        for (CheckBox box : scores) {
+            scoresTable.add(box);
+        }
 
         playButton.addListener(new ClickListener() {
             @Override
@@ -100,10 +96,10 @@ public class StateSinglePlayerOptionMenu extends State {
         medium.addListener(difficultyListener);
         hard.addListener(difficultyListener);
 
-        CheckBox[] scoreCheckboxes = {score3, score5, score7, score9, score11, score13, score15};
-        float[] score = {3f, 5f, 7f, 9f, 11f, 13f, 15f};
+        CheckBox[] scoreCheckboxes = {scores.get(0), scores.get(1), scores.get(2), scores.get(3), scores.get(4), scores.get(5), scores.get(6)};
+        float[] score2 = {3f, 5f, 7f, 9f, 11f, 13f, 15f};
         for (int i = 0; i < scoreCheckboxes.length; i++) {
-            if (generalPreferences.getScore() == score[i]) {
+            if (generalPreferences.getScore() == score2[i]) {
                 scoreCheckboxes[i].setChecked(true);
             }
         }
@@ -113,19 +109,16 @@ public class StateSinglePlayerOptionMenu extends State {
             public void changed(ChangeEvent event, Actor actor) {
                 for (int i = 0; i < scoreCheckboxes.length; i++) {
                     if (scoreCheckboxes[i].isChecked()) {
-                        generalPreferences.setScore(score[i]);
+                        generalPreferences.setScore(score2[i]);
                         break;
                     }
                 }
             }
         };
-        score3.addListener(scoreListener);
-        score5.addListener(scoreListener);
-        score7.addListener(scoreListener);
-        score9.addListener(scoreListener);
-        score11.addListener(scoreListener);
-        score13.addListener(scoreListener);
-        score15.addListener(scoreListener);
+
+        for (CheckBox box : scores) {
+            box.addListener(scoreListener);
+        }
 
         backButton.addListener(new ClickListener() {
             @Override
@@ -166,6 +159,10 @@ public class StateSinglePlayerOptionMenu extends State {
 
         stage.act(delta);
         stage.draw();
+    }
+
+    private CheckBox createCheckBox(String text) {
+        return new CheckBox(text, new Skin(Gdx.files.internal("skin/vhs-ui.json")));
     }
 
     @Override

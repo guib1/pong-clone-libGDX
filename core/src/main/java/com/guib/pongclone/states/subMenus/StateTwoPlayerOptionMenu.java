@@ -1,6 +1,7 @@
 package com.guib.pongclone.states.subMenus;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,6 +17,10 @@ import com.guib.pongclone.src.MenuLayout;
 import com.guib.pongclone.states.State;
 import com.guib.pongclone.states.StateManager;
 import com.guib.pongclone.states.game.StateTwoPlayerMatch;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class StateTwoPlayerOptionMenu extends State {
     private final StateManager gsm;
@@ -45,22 +50,23 @@ public class StateTwoPlayerOptionMenu extends State {
         TextButton backButton = new TextButton("BACK", skin);
 
         Label labelScore = new Label("SCORE TO WIN:", skin);
-        CheckBox score3 = new CheckBox("3", skin);
-        CheckBox score5 = new CheckBox("5", skin);
-        CheckBox score7 = new CheckBox("7", skin);
-        CheckBox score9 = new CheckBox("9", skin);
-        CheckBox score11 = new CheckBox("11", skin);
-        CheckBox score13 = new CheckBox("13", skin);
-        CheckBox score15 = new CheckBox("15", skin);
-        ButtonGroup<CheckBox> scores = new ButtonGroup<>(score3, score5, score9, score11, score13, score15);
+        ArrayList<CheckBox> scores = new ArrayList<>();
+        for (int i = 3; i <= 15; i += 2) {
+            scores.add(new CheckBox(Integer.toString(i), skin));
+        }
+        ButtonGroup<CheckBox> score = new ButtonGroup<>(scores.get(0), scores.get(1), scores.get(2), scores.get(3), scores.get(4), scores.get(5), scores.get(6));
         Table scoresTable = new Table();
-        scoresTable.add(score3);
-        scoresTable.add(score5);
-        scoresTable.add(score7);
-        scoresTable.add(score9);
-        scoresTable.add(score11);
-        scoresTable.add(score13);
-        scoresTable.add(score15);
+
+        Collections.sort(scores, new Comparator<CheckBox>() {
+            @Override
+            public int compare(CheckBox o1, CheckBox o2) {
+                return 0;
+            }
+        });
+
+        for (CheckBox box : scores) {
+            scoresTable.add(box);
+        }
 
         playButton.addListener(new ClickListener() {
             @Override
@@ -70,10 +76,10 @@ public class StateTwoPlayerOptionMenu extends State {
         });
 
         // function to save the visual state of selected option
-        CheckBox[] scoreCheckboxes = {score3, score5, score7, score9, score11, score13, score15};
-        float[] score = {3f, 5f, 7f, 9f, 11f, 13f, 15f};
+        CheckBox[] scoreCheckboxes = {scores.get(0), scores.get(1), scores.get(2), scores.get(3), scores.get(4), scores.get(5), scores.get(6)};
+        float[] score2 = {3f, 5f, 7f, 9f, 11f, 13f, 15f};
         for (int i = 0; i < scoreCheckboxes.length; i++) {
-            if (generalPreferences.getScore() == score[i]) {
+            if (generalPreferences.getScore() == score2[i]) {
                 scoreCheckboxes[i].setChecked(true);
             }
         }
@@ -83,19 +89,16 @@ public class StateTwoPlayerOptionMenu extends State {
             public void changed(ChangeEvent event, Actor actor) {
                 for (int i = 0; i < scoreCheckboxes.length; i++) {
                     if (scoreCheckboxes[i].isChecked()) {
-                        generalPreferences.setScore(score[i]);
+                        generalPreferences.setScore(score2[i]);
                         break;
                     }
                 }
             }
         };
-        score3.addListener(sensitivityListener);
-        score5.addListener(sensitivityListener);
-        score7.addListener(sensitivityListener);
-        score9.addListener(sensitivityListener);
-        score11.addListener(sensitivityListener);
-        score13.addListener(sensitivityListener);
-        score15.addListener(sensitivityListener);
+
+        for (CheckBox box : scores) {
+            box.addListener(sensitivityListener);
+        }
 
         backButton.addListener(new ClickListener() {
             @Override
