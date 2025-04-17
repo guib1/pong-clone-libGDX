@@ -29,7 +29,6 @@ public class Main extends ApplicationAdapter {
         gsm.startRichPresenceTimeStamp();
         gsm.push(new VideoIntro(gsm));
 
-        music.boom.play();
         music.mainMusic.play();
     }
 

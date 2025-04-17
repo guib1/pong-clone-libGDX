@@ -1,32 +1,39 @@
 package com.guib.pongclone.src.online;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryonet.EndPoint;
 
 public class NetworkListener {
-    private ServerSocket serverSocket;
-    private Socket clientSocket;
-    private BufferedReader in;
-    private PrintWriter out;
+    public static final int PORT = 54555;
 
-    public void startHost(int port) {
-        try {
-            serverSocket = new ServerSocket(port);
-
-            clientSocket = serverSocket.accept();
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-        } catch (IOException e) {
-            System.err.println("Error while opening server" + e);
-            throw new RuntimeException(e);
-        }
+    public static void registerClasses(EndPoint endPoint) {
+        Kryo kryo = endPoint.getKryo();
+        kryo.register(PaddleMove.class);
+        kryo.register(BallUpdate.class);
+        kryo.register(GameState.class);
+        kryo.register(Player.class);
     }
 
-    public void connectServer(String ip, int port) {
-        
+    // Mensagens de rede
+    public static class PaddleMove {
+        public float y;
+        public int playerId;
+    }
+
+    public static class BallUpdate {
+        public float x, y;
+        public float velocityX, velocityY;
+    }
+
+    public static class GameState {
+        public Player player1;
+        public Player player2;
+        public BallUpdate ball;
+    }
+
+    public static class Player {
+        public int id;
+        public float paddleY;
+        public int score;
     }
 }
