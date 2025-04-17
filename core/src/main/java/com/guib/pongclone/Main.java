@@ -3,6 +3,7 @@ package com.guib.pongclone;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.guib.pongclone.preferences.GeneralPreferences;
+import com.guib.pongclone.src.DiscordRichPresence;
 import com.guib.pongclone.src.Musics;
 import com.guib.pongclone.states.VideoIntro;
 import com.guib.pongclone.states.StateManager;
@@ -22,14 +23,14 @@ public class Main extends ApplicationAdapter {
         batch = new SpriteBatch();
         music = new Musics();
 
+        generalPreferences.load();
+
         gsm.create();
         gsm.startRichPresenceTimeStamp();
         gsm.push(new VideoIntro(gsm));
 
         music.boom.play();
         music.mainMusic.play();
-
-        generalPreferences.load();
     }
 
     @Override

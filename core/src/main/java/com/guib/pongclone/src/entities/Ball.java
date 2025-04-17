@@ -1,6 +1,7 @@
 package com.guib.pongclone.src.entities;
 
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 
 import java.util.Random;
 
@@ -40,13 +41,8 @@ public class Ball {
         ballSpawn(initialSpeed);
     }
 
-    public void simpleCollision(boolean x, boolean y) {
-        if (x) {
-            this.velocityX *= -1;
-        }
-        if (y) {
-            this.velocityY *= -1;
-        }
+    public void simpleCollision() {
+        this.velocityY *= -1;
     }
 
     public void paddleCollision(Paddle paddle, int alternator) {

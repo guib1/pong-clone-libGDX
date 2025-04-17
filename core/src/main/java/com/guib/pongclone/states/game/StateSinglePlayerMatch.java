@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Timer;
 import com.guib.pongclone.preferences.GeneralPreferences;
+import com.guib.pongclone.src.DiscordRichPresence;
 import com.guib.pongclone.src.entities.Ball;
 import com.guib.pongclone.src.entities.Paddle;
 import com.guib.pongclone.src.MatchBase;

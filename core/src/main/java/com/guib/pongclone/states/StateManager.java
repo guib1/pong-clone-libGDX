@@ -1,18 +1,13 @@
 package com.guib.pongclone.states;
 
-import de.jcm.discordgamesdk.Core;
-import de.jcm.discordgamesdk.CreateParams;
-import de.jcm.discordgamesdk.activity.Activity;
-import de.jcm.discordgamesdk.activity.ActivityButton;
-import de.jcm.discordgamesdk.activity.ActivityButtonsMode;
+import com.guib.pongclone.src.DiscordRichPresence;
 
 import java.time.Instant;
 import java.util.Stack;
 
 public class StateManager {
+    private final DiscordRichPresence discordRichPresence = new DiscordRichPresence();
     private final Stack<State> states;
-    private Core core;
-    private Activity activity = new Activity();
 
     public StateManager() {
         states = new Stack<State>();
@@ -38,54 +33,57 @@ public class StateManager {
         states.peek().create();
     }
 
-    // Discord rich presence implementation
-    public void setRichPresence(String details, String details2, String smallImage, Boolean haveImage) {
-
-        activity.setDetails(details + " | " + details2);
-        activity.assets().setLargeImage("logo-principal");
-        activity.assets().setLargeText("PONG");
-        if (haveImage) {
-            activity.assets().setSmallImage(smallImage);
-        } else {
-            activity.assets().setSmallImage(null);
+    public void create() {
+        if (!states.empty()) {
+            states.peek().create();
         }
-        core.activityManager().updateActivity(activity);
-    }
-
-    public void startRichPresenceTimeStamp() {
-        activity.timestamps().setStart(Instant.now());
+        discordRichPresence.setGameId();
     }
 
     public void render() {
         if (!states.empty()) {
             states.peek().render();
         }
-        if (core != null) {
-            core.runCallbacks();
+        if (discordRichPresence.core != null) {
+            discordRichPresence.core.runCallbacks();
+        }
+        if (!discordRichPresence.running) {
+            discordRichPresence.initDiscordRichPresence();
         }
     }
 
-    public void create() {
-        if (!states.empty()) {
-            states.peek().create();
-        }
+    // Discord rich presence implementation
+    public void setRichPresence(String details, String details2, String smallImage, Boolean haveImage) {
+        if (!discordRichPresence.running || discordRichPresence.core == null) return;
 
-        // Loading Discord Rich Presence
-        try (CreateParams params = new CreateParams()) {
-            params.setClientID(1359676774857834728L); // Discord developers application clientID
-            params.setFlags(CreateParams.getDefaultFlags());
-            core = new Core(params);
-        } catch (Exception e) {
-            System.err.println("Erro ao iniciar Discord Rich Presence: " + e.getMessage());
-        }
+        new Thread(() -> {
+            try {
+                discordRichPresence.activity.setDetails(details + " | " + details2);
+                discordRichPresence.activity.assets().setLargeImage("logo-principal");
+                discordRichPresence.activity.assets().setLargeText("PONG");
+                if (haveImage) {
+                    discordRichPresence.activity.assets().setSmallImage(smallImage);
+                } else {
+                    discordRichPresence.activity.assets().setSmallImage(null);
+                }
+                discordRichPresence.core.activityManager().updateActivity(discordRichPresence.activity);
+            } catch (RuntimeException e) {
+                System.err.println("Error: " + e.getMessage());
+                discordRichPresence.running = false;
+            }
+        }, "RPC-Update-Thread").start();
+    }
+
+    public void startRichPresenceTimeStamp() {
+        discordRichPresence.activity.timestamps().setStart(Instant.now());
     }
 
     public void dispose() {
         while (!states.isEmpty()) {
             states.pop().dispose();
         }
-        if (core != null) {
-            core.close();
+        if (discordRichPresence.core != null) {
+            discordRichPresence.core.close();
         }
     }
 

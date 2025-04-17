@@ -178,12 +178,12 @@ public class MatchBase {
             ball.circ.x = bot.rect.x - ball.circ.radius;
         }
         if (Intersector.overlaps(ball.circ, topBarRect)) {
-            ball.simpleCollision(false, true);
-            ball.circ.y = topBarRect.y - ball.circ.radius;
+            ball.simpleCollision();
+            ball.circ.y = topBarRect.y - 20 - ball.circ.radius;
         }
         if (Intersector.overlaps(ball.circ, downBarRect)) {
-            ball.simpleCollision(false, true);
-            ball.circ.y = downBarRect.y + downBarRect.height + ball.circ.radius;
+            ball.simpleCollision();
+            ball.circ.y = downBarRect.y + 20 + downBarRect.height + ball.circ.radius;
         }
     }
 

@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.guib.pongclone.preferences.GeneralPreferences;
+import com.guib.pongclone.src.DiscordRichPresence;
 import com.guib.pongclone.src.MenuLayout;
 import com.guib.pongclone.states.State;
 import com.guib.pongclone.states.StateManager;

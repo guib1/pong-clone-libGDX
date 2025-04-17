@@ -1,4 +1,4 @@
-package com.guib.pongclone.states.subMenus;
+package com.guib.pongclone.states.subMenus.onlineMenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -8,27 +8,30 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.guib.pongclone.src.DiscordRichPresence;
 import com.guib.pongclone.src.MenuLayout;
 import com.guib.pongclone.states.State;
 import com.guib.pongclone.states.StateManager;
+import com.guib.pongclone.states.subMenus.StateSinglePlayerOptionMenu;
+import com.guib.pongclone.states.subMenus.StateTwoPlayerOptionMenu;
 
-public class StateLocalMenu extends State {
+public class StateOnlineMenu extends State {
     private final StateManager gsm;
 
     private Stage stage;
     private SpriteBatch batch;
     private Texture background;
 
-    public StateLocalMenu(StateManager gsm) {
+    public StateOnlineMenu(StateManager gsm) {
         this.gsm = gsm;
     }
 
     @Override
     public void create() {
-        gsm.setRichPresence("On menus", "Local Mode Menu", "", false);
+        gsm.setRichPresence("On menus", "Online Mode Menu", "", false);
         batch = new SpriteBatch();
         background = new Texture("bg.jpg");
         stage = new Stage(new ScreenViewport());
@@ -36,47 +39,55 @@ public class StateLocalMenu extends State {
 
         Skin skin = new Skin(Gdx.files.internal("skin/vhs-ui.json"));
 
-        TextButton singlePlayerModeButton = new TextButton("SINGLE PLAYER", skin);
-        TextButton twoPlayerModeButton = new TextButton("TWO PLAYERS", skin);
+        TextField chooseNameField = new TextField("", skin);
+        TextButton setNameButton = new TextButton("SET NAME", skin);
+        TextButton createServerButton = new TextButton("CREATE SERVER", skin);
+        TextButton joinServerButton = new TextButton("JOIN SERVER", skin);
         TextButton backButton = new TextButton("BACK", skin);
 
-        singlePlayerModeButton.addListener(new ClickListener() {
+        setNameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.push(new StateSinglePlayerOptionMenu(gsm));
+                System.out.println(chooseNameField.getText());
             }
         });
 
-        twoPlayerModeButton.addListener(new ClickListener() {
+        createServerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gsm.push(new StateTwoPlayerOptionMenu(gsm));
+                gsm.push(new StateServerMenu(gsm));
+            }
+        });
+
+        joinServerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gsm.push(new StateClientMenu(gsm));
             }
         });
 
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-               gsm.pop();
+                gsm.pop();
             }
         });
 
-        stage.addActor(singlePlayerModeButton);
-        stage.addActor(twoPlayerModeButton);
+        stage.addActor(setNameButton);
+        stage.addActor(chooseNameField);
+        stage.addActor(createServerButton);
+        stage.addActor(joinServerButton);
         stage.addActor(backButton);
 
-        Object[] buttons = new Object[]{singlePlayerModeButton, twoPlayerModeButton, backButton};
-        for (Object button : buttons) {
-            stage.addActor((TextButton) button);
-        }
-
-        float numberOfObjects = buttons.length;
+        float numberOfObjects = 7;
 
         MenuLayout menuLayout = new MenuLayout(numberOfObjects);
 
-        singlePlayerModeButton.setPosition(menuLayout.setX(singlePlayerModeButton.getWidth()), menuLayout.setY(singlePlayerModeButton.getHeight(), 1));
-        twoPlayerModeButton.setPosition(menuLayout.setX(twoPlayerModeButton.getWidth()), menuLayout.setY(twoPlayerModeButton.getHeight(), 2));
-        backButton.setPosition(menuLayout.setX(backButton.getWidth()), menuLayout.setY(backButton.getHeight(), 3));
+        chooseNameField.setPosition(menuLayout.setX(chooseNameField.getWidth()), menuLayout.setY(chooseNameField.getHeight() - 5, 2));
+        setNameButton.setPosition(menuLayout.setX(setNameButton.getWidth()), menuLayout.setY(setNameButton.getHeight(), 3));
+        createServerButton.setPosition(menuLayout.setX(createServerButton.getWidth()), menuLayout.setY(createServerButton.getHeight(), 5));
+        joinServerButton.setPosition(menuLayout.setX(joinServerButton.getWidth()), menuLayout.setY(joinServerButton.getHeight(), 6));
+        backButton.setPosition(menuLayout.setX(backButton.getWidth()), menuLayout.setY(backButton.getHeight(), 7));
     }
 
     @Override
