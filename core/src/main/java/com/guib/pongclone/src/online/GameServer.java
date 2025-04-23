@@ -1,6 +1,7 @@
 package com.guib.pongclone.src.online;
 
 import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
@@ -11,36 +12,22 @@ public class GameServer {
 
     public GameServer() throws IOException {
         server = new Server();
-        NetworkListener.register(server.getKryo());
-
-        server.getKryo().setRegistrationRequired(false);
-        server.bind(NetworkListener.PORT, NetworkListener.PORT + 1); // TCP + UDP
+        server.start();
+        server.bind(54555, 54777);
 
         server.addListener(new Listener() {
-            @Override
-            public void connected(Connection connection) {
-                // Envia via TCP (importante!)
-                NetworkListener.PlayerConnected msg = new NetworkListener.PlayerConnected();
-                msg.playerId = server.getConnections().length; // 1 ou 2
-                connection.sendTCP(msg);
-            }
-
-            @Override
             public void received(Connection connection, Object object) {
-                if (object instanceof NetworkListener.PaddleUpdate) {
-                    NetworkListener.PaddleUpdate update = (NetworkListener.PaddleUpdate) object;
-                    // Repassa para todos via UDP (rápido!)
-                    server.sendToAllUDP(update);
+                if (object instanceof String) {
+                    String message = (String) object;
+                    System.out.println("Received message: " + message);
+                } else {
+                    // Handle other messages
                 }
             }
         });
-
-        server.start();
     }
 
-    public void sendBallUpdate(float x, float y, float velX, float velY) {
-        NetworkListener.BallUpdate update = new NetworkListener.BallUpdate();
-        update.x = x; update.y = y; update.velX = velX; update.velY = velY;
-        server.sendToAllUDP(update); // Envia via UDP
+    public static void main(String[] args) throws IOException {
+        new GameServer();
     }
 }

@@ -36,13 +36,14 @@ public class StateClientMenu extends State {
         Gdx.input.setInputProcessor(stage);
 
         Skin skin = new Skin(Gdx.files.internal("skin/vhs-ui.json"));
+        Skin smallSkin = new Skin(Gdx.files.internal("skin/vhs-ui.json"));
 
         Label ipLabel = new Label("INSERT HOST IP:", skin);
-        TextField ipField = new TextField("", skin);
+        TextField ipField = new TextField("", smallSkin);
         TextButton connectButton = new TextButton("CONNECT", skin);
         TextButton backButton = new TextButton("CANCEL", skin);
 
-        TextField.TextFieldStyle style = new TextField.TextFieldStyle(skin.get(TextField.TextFieldStyle.class));
+        TextField.TextFieldStyle style = new TextField.TextFieldStyle(smallSkin.get(TextField.TextFieldStyle.class));
         style.font.getData().setScale(0.5f);
         ipField.setStyle(style);
 
@@ -84,6 +85,8 @@ public class StateClientMenu extends State {
 
     @Override
     public void dispose() {
-
+        batch.dispose();
+        stage.dispose();
+        background.dispose();
     }
 }
