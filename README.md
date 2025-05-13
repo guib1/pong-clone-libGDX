@@ -29,4 +29,4 @@ A simple Pong clone game built with LibGDX.
 
 ## License
 
-This project is open source. Feel free to use the code as you wish (consider adding a specific license file like MIT or Apache 2.0 if you want to be formal).
+This project is open source. Feel free to use the code as you wish.
