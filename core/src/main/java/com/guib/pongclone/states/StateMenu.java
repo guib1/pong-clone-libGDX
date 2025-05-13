@@ -17,7 +17,6 @@ import com.guib.pongclone.src.DiscordRichPresence;
 import com.guib.pongclone.src.Effects;
 import com.guib.pongclone.src.MenuLayout;
 import com.guib.pongclone.states.subMenus.StateLocalMenu;
-import com.guib.pongclone.states.subMenus.onlineMenu.StateOnlineMenu;
 import com.guib.pongclone.states.subMenus.StateOptionMenu;
 
 public class StateMenu extends State {
@@ -45,8 +44,7 @@ public class StateMenu extends State {
         Skin skin = new Skin(Gdx.files.internal("skin/vhs-ui.json"));
 
         Image menuLogo = new Image(logo);
-        TextButton localModeButton = new TextButton("LOCAL", skin);
-        TextButton onlineModeButton = new TextButton("ONLINE", skin);
+        TextButton localModeButton = new TextButton("PLAY", skin);
         TextButton optionsButton = new TextButton("OPTIONS", skin);
         TextButton exitButton = new TextButton("EXIT", skin);
 
@@ -54,13 +52,6 @@ public class StateMenu extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gsm.push(new StateLocalMenu(gsm));
-            }
-        });
-
-        onlineModeButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                gsm.push(new StateOnlineMenu(gsm));
             }
         });
 
@@ -78,7 +69,7 @@ public class StateMenu extends State {
             }
         });
 
-        Object[] buttons = new Object[]{localModeButton, onlineModeButton, optionsButton, exitButton};
+        Object[] buttons = new Object[]{localModeButton, optionsButton, exitButton};
         for (Object button : buttons) {
             stage.addActor((TextButton) button);
         }
@@ -92,9 +83,8 @@ public class StateMenu extends State {
 
         tableLogo.setPosition(menuLayout.setX(tableLogo.getWidth()), menuLayout.setY(tableLogo.getHeight(), 1));
         localModeButton.setPosition(menuLayout.setX(localModeButton.getWidth()), menuLayout.setY(localModeButton.getHeight(), 3));
-        onlineModeButton.setPosition(menuLayout.setX(onlineModeButton.getWidth()), menuLayout.setY(onlineModeButton.getHeight(), 4));
-        optionsButton.setPosition(menuLayout.setX(optionsButton.getWidth()), menuLayout.setY(optionsButton.getHeight(), 5));
-        exitButton.setPosition(menuLayout.setX(exitButton.getWidth()), menuLayout.setY(exitButton.getHeight(), 6));
+        optionsButton.setPosition(menuLayout.setX(optionsButton.getWidth()), menuLayout.setY(optionsButton.getHeight(), 4));
+        exitButton.setPosition(menuLayout.setX(exitButton.getWidth()), menuLayout.setY(exitButton.getHeight(), 5));
     }
 
     @Override

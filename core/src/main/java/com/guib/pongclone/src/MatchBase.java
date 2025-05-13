@@ -34,6 +34,7 @@ public class MatchBase {
     public Rectangle downBarRect;
     public float pCenterY = (Gdx.graphics.getHeight() - 70) / 2f;
     private boolean goal = false;
+    private final Musics music = new Musics();
 
     public void staticBars() {
         // those 2 have to be final because it'll be used in collisions
@@ -133,6 +134,7 @@ public class MatchBase {
     public void localTwoPlayerMovement() {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             player1.movement(generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
+
         } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             player1.movement(-generalPreferences.getPlayerSpeed() * Gdx.graphics.getDeltaTime());
         }
@@ -168,14 +170,17 @@ public class MatchBase {
         if (Intersector.overlaps(ball.circ, player1.rect)) {
             ball.paddleCollision(player1, 1);
             ball.circ.x = player1.rect.x + player1.rect.width + ball.circ.radius;
+            music.hitSoundEffect.play();
         }
         if (Intersector.overlaps(ball.circ, player2.rect)) {
             ball.paddleCollision(player2, -1);
             ball.circ.x = player2.rect.x - ball.circ.radius;
+            music.hitSoundEffect.play();
         }
         if (Intersector.overlaps(ball.circ, bot.rect)) {
             ball.paddleCollision(bot, -1);
             ball.circ.x = bot.rect.x - ball.circ.radius;
+            music.hitSoundEffect.play();
         }
         if (Intersector.overlaps(ball.circ, topBarRect)) {
             ball.simpleCollision();
